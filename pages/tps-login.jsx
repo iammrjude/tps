@@ -3,14 +3,14 @@ import { useState } from 'react';
 import { useRouter } from 'next/router';
 
 export default function TpsLogin() {
+    const router = useRouter();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
-    const router = useRouter();
 
     function handleSubmit(e) {
         e.preventDefault();
-        fetch('https://tps-api-852849bdc6c6.herokuapp.com/login-student', {
+        fetch('/api/login-student', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email: email, password: password })
@@ -19,6 +19,9 @@ export default function TpsLogin() {
         }).then(function (data) {
             setMessage(data.message);
             if (data.success) {
+                // Store the email in session storage
+                sessionStorage.setItem('studentEmail', email);
+                
                 // Redirect to tps-dashboard page
                 router.push('/tps-dashboard');
             }
@@ -42,7 +45,7 @@ export default function TpsLogin() {
             </Head>
 
             <div id="Body">
-                <div id="Form" enctype="multipart/form-data">
+                <div id="Form" encType="multipart/form-data">
                     <link href="images/futologo3.png" rel="shortcut icon" type="image/x-icon" />
 
                     <link rel="stylesheet" href="./css/demos.css" />
@@ -136,7 +139,7 @@ export default function TpsLogin() {
                                                                     <p>Institutions receiving Academic Transcript can verify the
                                                                         authenticity of the transcript and other documents.</p>
                                                                 </div>
-                                                                <form name="tpsForm" id="tpsForm" enctype="multipart/form-data" onSubmit={handleSubmit}>
+                                                                <form name="tpsForm" id="tpsForm" encType="multipart/form-data" onSubmit={handleSubmit}>
                                                                     <p style={{ height: "25px", width: "410px", marginLeft: "100px", float: "left", color: "#F00" }}></p>
                                                                     <div title="Account Information"
                                                                         style={{ width: "430px", textAlign: "justify", marginLeft: "100px", marginTop: "0px", float: "left", borderStyle: "groove", borderWidth: "1px", height: "280px" }}>
@@ -144,7 +147,7 @@ export default function TpsLogin() {
                                                                             <tbody>
                                                                                 <tr>
                                                                                     <td>
-                                                                                        <label for="EmailAddress" title="Your valid email address">EMAIL ADDRESS:</label>
+                                                                                        <label htmlFor="EmailAddress" title="Your valid email address">EMAIL ADDRESS:</label>
                                                                                     </td>
                                                                                 </tr>
                                                                                 <tr style={{ height: "50px" }}>
@@ -154,7 +157,7 @@ export default function TpsLogin() {
                                                                                 </tr>
                                                                                 <tr>
                                                                                     <td>
-                                                                                        <label for="Password" title="Your correct password">PASSWORD:</label>
+                                                                                        <label htmlFor="Password" title="Your correct password">PASSWORD:</label>
                                                                                     </td>
                                                                                 </tr>
                                                                                 <tr style={{ height: "50px" }}>
@@ -168,7 +171,7 @@ export default function TpsLogin() {
                                                                                     </td>
                                                                                 </tr>
                                                                                 <tr>
-                                                                                    <td colspan="2">
+                                                                                    <td colSpan="2">
                                                                                         <div className="left">
                                                                                             <p>
                                                                                                 <a href="">Register</a> | <a href="">Forgot Password?</a>

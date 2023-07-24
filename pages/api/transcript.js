@@ -158,7 +158,7 @@ const resultModel = mongoose.model('Result', resultSchema, 'results');
 
 async function uploadResult(faculty, department, session, level, semester, regNumber, resultsArray) {
     try {
-        regNumber = 20171045385;
+        const regNumber = 20171045385;
         const firstSemester = [
             { courseCode: "GST101", courseTitle: "Use of English I", unit: 2, grade: "A" },
             { courseCode: "GST103", courseTitle: "Humanities I", unit: 1, grade: "A" },

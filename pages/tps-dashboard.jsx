@@ -1,6 +1,61 @@
 import Head from "next/head";
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 
 export default function TpsDashboard() {
+    const router = useRouter();
+    const [firstName, setFirstName] = useState('');
+    const [middleName, setMiddleName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [regNumber, setRegNumber] = useState('');
+    const [email, setEmail] = useState('');
+    const [programSelectedValue, setProgramSelectedValue] = useState('');
+    const [facultySelectedValue, setFacultySelectedValue] = useState('');
+    const [departmentSelectedValue, setDepartmentSelectedValue] = useState('');
+    const [isFacultyDisabled, setIsFacultyDisabled] = useState(true);
+    const [isDepartmentDisabled, setIsDepartmentDisabled] = useState(true);
+
+    async function getStudentInfo(studentEmail) {
+        const response = await fetch(`/api/student-info?email=${studentEmail}`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        });
+        const studentInfo = await response.json();
+
+        // Populate the form fields with the student data
+        setFirstName(studentInfo.data.fname);
+        setMiddleName(studentInfo.data.middleName);
+        setLastName(studentInfo.data.lname);
+        setRegNumber(studentInfo.data.regNumber);
+        setEmail(studentInfo.data.email);
+    }
+
+    useEffect(() => {
+        // Retrieve the stored email from session storage
+        const studentEmail = sessionStorage.getItem('studentEmail');
+        if (studentEmail) {
+            getStudentInfo(studentEmail)
+        } else {
+            // Redirect to tps-login page
+            router.push('/tps-login');
+        }
+    }, []);
+
+    useEffect(() => {
+        if (programSelectedValue === "B.Eng.") {
+            setIsFacultyDisabled(false);
+        } else {
+            setProgramSelectedValue('');
+            setIsFacultyDisabled(true);
+        }
+        if (facultySelectedValue === "SEET") {
+            setIsDepartmentDisabled(false);
+        } else {
+            setFacultySelectedValue('');
+            setIsDepartmentDisabled(true);
+        }
+    }, [programSelectedValue, facultySelectedValue]);
+
     return (
         <>
             <Head id="Head">
@@ -16,17 +71,14 @@ export default function TpsDashboard() {
             </Head>
 
             <div id="Body">
-                <form method="post" action="/" id="Form" enctype="multipart/form-data">
+                <form method="post" action="/" id="Form" encType="multipart/form-data">
                     <link href="images/futologo3.png" rel="shortcut icon" type="image/x-icon" />
 
                     <link rel="stylesheet" href="/css/demos.css" />
 
                     <div id="page" className="" style={{ backgroundColor: "#FFF", color: "#000" }}>
-                        <div className="header"
-                            style={{ backgroundImage: "url('images/futoHeaderbg.jpg')", backgroundPosition: "top", backgroundRepeat: "no-repeat" }}>
-                            <div id="ControlPanelWrapper">
-
-                            </div>
+                        <div className="header" style={{ backgroundImage: "url('images/futoHeaderbg.jpg')", backgroundPosition: "top", backgroundRepeat: "no-repeat" }}>
+                            <div id="ControlPanelWrapper"></div>
                             <div className="clear"></div>
                             <div className="">
                                 <div className="clear"></div>
@@ -76,7 +128,7 @@ export default function TpsDashboard() {
                                                 </div>
                                                 <div className="DNNInfo_NewsList">
                                                     <div className="news_detailsbox">
-                                                        <form name="Form" id="Form" enctype="multipart/form-data">
+                                                        <form name="Form" id="Form" encType="multipart/form-data">
                                                             <div className="news_detailstitle" style={{ height: "20px" }}>
                                                                 <div style={{ float: "left", marginLeft: "20px" }}>
                                                                     FUTO Transcript Processing and Result Verification System
@@ -91,71 +143,43 @@ export default function TpsDashboard() {
                                                                     <tbody>
                                                                         <tr style={{ height: "40px" }}>
                                                                             <td>
-                                                                                <label for='LastName' title='Your Last Name'>LAST
-                                                                                    NAME:</label>
+                                                                                <label htmlFor='LastName' title='Your Last Name'>LAST NAME:</label>
                                                                             </td>
                                                                             <td>
-                                                                                <input readonly autocomplete='off' data-val='true'
-                                                                                    data-val-required='*' id='LastName' name='LastName'
-                                                                                    placeholder='Your Last Name' type='text' value=''
-                                                                                    style={{ width: "200px" }} />
+                                                                                <input readOnly autoComplete='off' id='LastName' name='LastName' type='text' value={lastName} style={{ width: "200px", resize: 'none', }} />
                                                                             </td>
                                                                             <td style={{ width: "100px", textAlign: "right" }}>
-                                                                                <label for='FirstName' title='Your First Name'>FIRST
-                                                                                    NAME:</label>
+                                                                                <label htmlFor='FirstName' title='Your First Name'>FIRST NAME:</label>
                                                                             </td>
                                                                             <td>
-                                                                                <input readonly autocomplete='off' data-val='true'
-                                                                                    data-val-required='*' id='FirstName'
-                                                                                    name='FirstName' placeholder='Your First Name'
-                                                                                    type='text' value='' style={{ width: "200px" }} />
+                                                                                <input readOnly autoComplete='off' id='FirstName' name='FirstName' type='text' value={firstName} style={{ width: "200px", resize: 'none', }} />
                                                                             </td>
                                                                             <td style={{ width: "100px", textAlign: "right" }}>
-                                                                                <label for='MiddleName' title='Your Last Name'>MIDDLE
-                                                                                    NAME:</label>
+                                                                                <label htmlFor='MiddleName' title='Your Last Name'>MIDDLE NAME:</label>
                                                                             </td>
                                                                             <td>
-                                                                                <input readonly autocomplete='off' id='MiddleName'
-                                                                                    name='MiddleName' placeholder='Your Middle Name'
-                                                                                    type='text' value='' style={{ width: "200px" }} />
+                                                                                <input readOnly autoComplete='off' id='MiddleName' name='MiddleName' type='text' value={middleName} style={{ width: "200px", resize: 'none', }} />
                                                                             </td>
                                                                         </tr>
 
                                                                         <tr style={{ height: "40px" }}>
                                                                             <td>
-                                                                                <label for='RegNumber'
-                                                                                    title='Your Registration Number'>REG.
-                                                                                    NUMBER:</label>
+                                                                                <label htmlFor='RegNumber' title='Your Registration Number'>REG. NUMBER:</label>
                                                                             </td>
                                                                             <td>
-                                                                                <input readonly autocomplete='off' data-val='true'
-                                                                                    data-val-required='*' id='RegNumber'
-                                                                                    name='RegNumber'
-                                                                                    placeholder='Your Registration Number' type='text'
-                                                                                    value='' style={{ width: "200px" }} />
+                                                                                <input readOnly autoComplete='off' id='RegNumber' name='RegNumber' type='text' value={regNumber} style={{ width: "200px", resize: 'none', }} />
                                                                             </td>
                                                                             <td style={{ width: "100px", textAlign: "right" }}>
-                                                                                <label for="Email"
-                                                                                    title="Your Valid E-Mail Address as Verification will be required.">EMAIL
-                                                                                    ADDRESS:</label>
+                                                                                <label htmlFor="Email" title="Your Valid E-Mail Address as Verification will be required.">EMAIL ADDRESS:</label>
                                                                             </td>
                                                                             <td>
-                                                                                <input readonly autocomplete="off" data-val="true"
-                                                                                    data-val-regex="Enter a valid Email Address"
-                                                                                    data-val-regex-pattern="^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$"
-                                                                                    data-val-required="*" id="Email" name="Email"
-                                                                                    type="text" value=""
-                                                                                    placeholder="Your valid Email Address"
-                                                                                    style={{ width: "200px" }} />
+                                                                                <input readOnly autoComplete="off" id="Email" name="Email" type="email" value={email} style={{ width: "200px", resize: 'none', }} />
                                                                             </td>
                                                                             <td style={{ width: "100px", textAlign: "right" }}>
-                                                                                <label for="program"
-                                                                                    title="Select your program">PROGRAM:</label>
+                                                                                <label htmlFor="program" title="Select your program">PROGRAM:</label>
                                                                             </td>
                                                                             <td>
-                                                                                <select data-val="true" data-val-required="*"
-                                                                                    id="program" name="program" onChange="faculty()"
-                                                                                    style={{ width: "200px" }}>
+                                                                                <select data-val="true" data-val-required="*" id="program" name="program" value={programSelectedValue} onChange={(e) => setProgramSelectedValue(e.target.value)} style={{ width: "200px" }}>
                                                                                     <option id='prog_1' value=''></option>
                                                                                     <option value='B.Eng.'>B.Eng.</option>
                                                                                     <option value='B.Tech.'>B.Tech.</option>
@@ -172,48 +196,30 @@ export default function TpsDashboard() {
 
                                                                         <tr style={{ height: "40px" }}>
                                                                             <td>
-                                                                                <label for="school"
-                                                                                    title="Your School/Faculty">SCHOOL:</label>
+                                                                                <label htmlFor="school" title="Your School/Faculty">SCHOOL:</label>
                                                                             </td>
                                                                             <td>
-                                                                                <select data-val="true" data-val-required="*"
-                                                                                    id="school" name="school" onChange="dept()"
-                                                                                    style={{ width: "200px" }} disabled>
+                                                                                <select data-val="true" data-val-required="*" id="school" name="school" value={facultySelectedValue} onChange={(e) => setFacultySelectedValue(e.target.value)} style={{ width: "200px" }} disabled={isFacultyDisabled}>
                                                                                     <option value=""></option>
-                                                                                    <option value="SAAT">School of Agriculture And
-                                                                                        Agricultural Technology (SAAT)</option>
-                                                                                    <option value="SBMS">School of Basic Medical Science
-                                                                                        (SBMS)</option>
-                                                                                    <option value="SOBS">School of Biological Science
-                                                                                        (SOBS)</option>
-                                                                                    <option value="SEET">School of Engineering and
-                                                                                        Engineering Technology (SEET)</option>
-                                                                                    <option value="SESET">School of Electrical Systems
-                                                                                        Engineering Technology (SESET)</option>
-                                                                                    <option value="SOES">School of Environmental Science
-                                                                                        (SOES)</option>
-                                                                                    <option value="SOHT">School of Health Technology
-                                                                                        (SOHT)</option>
-                                                                                    <option value="SICT">School of Information and
-                                                                                        Communication Technology (SICT)</option>
-                                                                                    <option value="SMAT">School of Management Technology
-                                                                                        (SMAT)</option>
-                                                                                    <option value="SOPS">School of Physical Science
-                                                                                        (SOPS)</option>
-                                                                                    <option value="SPGS">School of Postgraduate Studies
-                                                                                        (SPGS)</option>
-                                                                                    <option value="DGS">Directorate of General Studies
-                                                                                        (DGS)</option>
+                                                                                    <option value="SAAT">School of Agriculture And Agricultural Technology (SAAT)</option>
+                                                                                    <option value="SBMS">School of Basic Medical Science (SBMS)</option>
+                                                                                    <option value="SOBS">School of Biological Science (SOBS)</option>
+                                                                                    <option value="SEET">School of Engineering and Engineering Technology (SEET)</option>
+                                                                                    <option value="SESET">School of Electrical Systems Engineering Technology (SESET)</option>
+                                                                                    <option value="SOES">School of Environmental Science (SOES)</option>
+                                                                                    <option value="SOHT">School of Health Technology (SOHT)</option>
+                                                                                    <option value="SICT">School of Information and Communication Technology (SICT)</option>
+                                                                                    <option value="SMAT">School of Management Technology (SMAT)</option>
+                                                                                    <option value="SOPS">School of Physical Science (SOPS)</option>
+                                                                                    <option value="SPGS">School of Postgraduate Studies (SPGS)</option>
+                                                                                    <option value="DGS">Directorate of General Studies (DGS)</option>
                                                                                 </select>
                                                                             </td>
                                                                             <td style={{ width: "100px", textAlign: "right" }}>
-                                                                                <label for="department"
-                                                                                    title="Your Department.">DEPARTMENT:</label>
+                                                                                <label htmlFor="department" title="Your Department.">DEPARTMENT:</label>
                                                                             </td>
                                                                             <td>
-                                                                                <select data-val="true" data-val-required="*"
-                                                                                    id="department" name="department"
-                                                                                    style={{ width: "200px" }} disabled>
+                                                                                <select data-val="true" data-val-required="*" id="department" name="department" value={departmentSelectedValue} onChange={(e) => setDepartmentSelectedValue(e.target.value)} style={{ width: "200px" }} disabled={isDepartmentDisabled}>
                                                                                     <option value=""></option>
                                                                                     <option value="ABE">Agricultural and Bio resources
                                                                                         Engineering</option>
@@ -234,7 +240,7 @@ export default function TpsDashboard() {
                                                                             </td>
 
                                                                             <td style={{ width: "100px", textAlign: "right" }}>
-                                                                                {/* <!-- <label for="datepicker" title="Transcript Request Format">DATE GRADUATED:</label> --> */}
+                                                                                {/* <!-- <label htmlFor="datepicker" title="Transcript Request Format">DATE GRADUATED:</label> --> */}
                                                                             </td>
                                                                             <td>
                                                                                 {/* <!-- <input type="date" id="datepicker" name="datepicker" style={{width:"200px"}} placeholder="YYYY-MM-DD" /> --> */}
@@ -248,7 +254,7 @@ export default function TpsDashboard() {
                                                                 <button style={{ float: "left", marginLeft: "20px" }}>Request Transcript</button>
                                                                 <br />
                                                                 <br />
-                                                                <div style={{marginBottom: "20px"}}></div>
+                                                                <div style={{ marginBottom: "20px" }}></div>
 
                                                                 <div id="tps_info"
                                                                     style={{ minHeight: "25px", height: "auto", width: "960px", textAlign: "center", marginLeft: "20px", color: "#F00" }}>
@@ -288,8 +294,7 @@ export default function TpsDashboard() {
                                                                     style={{ height: "310px", width: "960px", marginLeft: "20px", overflow: "auto" }}>
                                                                     <legend>PREVIOUS APPLICATIONS</legend>
                                                                     <div style={{ display: "none" }}>
-                                                                        <input id="txtcategory" name="txtcategory" type="text"
-                                                                            value="transcript" />
+                                                                        <input readOnly id="txtcategory" name="txtcategory" type="text" value="transcript" />
                                                                     </div>
                                                                     <div id="previousRQST" style={{ color: "#000" }}>
 

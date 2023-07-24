@@ -1,9 +1,28 @@
 import Head from 'next/head';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
+import { Fade } from 'react-slideshow-image';
+import 'react-slideshow-image/dist/styles.css';
 
 export default function Home() {
+    const slideImages = [
+        'images/slide01.jpg',
+        'images/slide03.jpg',
+    ];
+
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const slideshowRef = useRef(null);
+
+    useEffect(() => {
+        // Increment the slide index every 5 seconds
+        const interval = setInterval(() => {
+            setCurrentIndex((prevIndex) => (prevIndex + 1) % slideImages.length);
+        }, 5000);
+
+        // Clear the interval when the component unmounts
+        return () => clearInterval(interval);
+    }, [slideImages.length]);
     return (
         <>
             <Head>
@@ -123,125 +142,73 @@ export default function Home() {
                         </header>
 
                         <section className="intro_section page_mainslider ds">
-                            <div className="flexslider vertical-nav" data-dots="true" data-nav="false">
-                                <ul className="slides">
-
-                                    <li>
-                                        <img src="images/slide01.jpg" alt="" />
-                                        <div className="container">
-                                            <div className="row">
-                                                <div className="col-sm-12 text-left">
-                                                    <div className="slide_description_wrapper">
-                                                        <div className="slide_description">
-                                                            <div className="intro-layer" data-animation="fadeInUp">
-                                                                <h3>
-                                                                    <span className="highlight2">
-                                                                        Welcome To Federal University Of Technology
-                                                                    </span>
-                                                                    <br /> <span className="highlight2">OWERRI</span>
-                                                                </h3>
+                            <div className="slide-container">
+                                <Fade ref={slideshowRef}>
+                                    {slideImages.map((image, index) => (
+                                        <div key={index} className={index === currentIndex ? 'each-fade active' : 'each-fade'}>
+                                            <img src={image} alt="" />
+                                            <div className="container">
+                                                <div className="row">
+                                                    <div className="col-sm-12 text-left">
+                                                        <div className="slide_description_wrapper">
+                                                            <div className="slide_description">
+                                                                {index === 0 && (
+                                                                    <>
+                                                                        <div className="intro-layer" data-animation="fadeInUp">
+                                                                            <h3>
+                                                                                <span className="highlight2">Welcome To Federal University Of Technology</span>
+                                                                                <br /> <span className="highlight2">OWERRI</span>
+                                                                            </h3>
+                                                                        </div>
+                                                                        <div className="intro-layer" data-animation="fadeInUp">
+                                                                            <p>
+                                                                                Make education your dream and it will help you to fulfill your
+                                                                                dream.<br /> Education takes us to the heights of success.
+                                                                            </p>
+                                                                        </div>
+                                                                        <div className="intro-layer" data-animation="fadeInUp">
+                                                                            <a href="#" className="theme_button color2 two_lines_button">
+                                                                                About FUTO
+                                                                            </a>
+                                                                        </div>
+                                                                    </>
+                                                                )}
+                                                                {index === 1 && (
+                                                                    <>
+                                                                        <div className="intro-layer" data-animation="fadeInUp">
+                                                                            <h2>
+                                                                                <span className="highlight2">Education</span> is like passport to
+                                                                                <br /> the
+                                                                                <span className="highlight2">Better Future</span>!
+                                                                            </h2>
+                                                                        </div>
+                                                                        <div className="intro-layer" data-animation="fadeInUp">
+                                                                            <p>
+                                                                                Make education your dream and it will help you to fulfill your
+                                                                                dream.<br /> Education takes us to the heights of success.
+                                                                            </p>
+                                                                        </div>
+                                                                        <div className="intro-layer" data-animation="fadeInUp">
+                                                                            <a href="" className="theme_button color2 two_lines_button">
+                                                                                About FUTO
+                                                                            </a>
+                                                                        </div>
+                                                                    </>
+                                                                )}
                                                             </div>
-                                                            <div className="intro-layer" data-animation="fadeInUp">
-                                                                <p>
-                                                                    Make education your dream and it will help you to fulfill your
-                                                                    dream.<br /> Education takes us to the heights of success.
-                                                                </p>
-                                                            </div>
-                                                            <div className="intro-layer" data-animation="fadeInUp">
-                                                                <a href="" className="theme_button color2 two_lines_button">
-                                                                    About FUTO
-                                                                </a>
-                                                            </div>
+                                                            {/* <!-- eof .slide_description --> */}
                                                         </div>
-                                                        {/* <!-- eof .slide_description --> */}
+                                                        {/* <!-- eof .slide_description_wrapper --> */}
                                                     </div>
-                                                    {/* <!-- eof .slide_description_wrapper --> */}
+                                                    {/* <!-- eof .col-* --> */}
                                                 </div>
-                                                {/* <!-- eof .col-* --> */}
+                                                {/* <!-- eof .row --> */}
                                             </div>
-                                            {/* <!-- eof .row --> */}
+                                            {/* <!-- eof .container --> */}
                                         </div>
-                                        {/* <!-- eof .container --> */}
-                                    </li>
-
-                                    <li>
-                                        <img src="images/slide02.jpg" alt="" />
-                                        <div className="container">
-                                            <div className="row">
-                                                <div className="col-sm-12 text-center">
-                                                    <div className="slide_description_wrapper">
-                                                        <div className="slide_description">
-                                                            <div className="intro-layer" data-animation="fadeInUp">
-                                                                <h2>
-                                                                    <span className="highlight2">Education</span> is a tool that
-                                                                    <br /> helps us get
-                                                                    <span className="highlight2">Success</span>!
-                                                                </h2>
-                                                            </div>
-                                                            <div className="intro-layer" data-animation="fadeInUp">
-                                                                <p>
-                                                                    Make education your dream and it will help you to fulfill your
-                                                                    dream.<br /> Education takes us to the heights of success.
-                                                                </p>
-                                                            </div>
-                                                            <div className="intro-layer" data-animation="fadeInUp">
-                                                                <a href="" className="theme_button color2 two_lines_button">
-                                                                    About FUTO
-                                                                </a>
-                                                            </div>
-                                                        </div>
-                                                        {/* <!-- eof .slide_description --> */}
-                                                    </div>
-                                                    {/* <!-- eof .slide_description_wrapper --> */}
-                                                </div>
-                                                {/* <!-- eof .col-* --> */}
-                                            </div>
-                                            {/* <!-- eof .row --> */}
-                                        </div>
-                                        {/* <!-- eof .container --> */}
-                                    </li>
-
-                                    <li>
-                                        <img src="images/slide03.jpg" alt="" />
-                                        <div className="container">
-                                            <div className="row">
-                                                <div className="col-sm-12 text-center">
-                                                    <div className="slide_description_wrapper">
-                                                        <div className="slide_description">
-                                                            <div className="intro-layer" data-animation="fadeInUp">
-                                                                <h2>
-                                                                    <span className="highlight2">Education</span> is like passport to
-                                                                    <br /> the
-                                                                    <span className="highlight2">Better Future</span>!
-                                                                </h2>
-                                                            </div>
-                                                            <div className="intro-layer" data-animation="fadeInUp">
-                                                                <p>
-                                                                    Make education your dream and it will help you to fulfill your
-                                                                    dream.<br /> Education takes us to the heights of success.
-                                                                </p>
-                                                            </div>
-                                                            <div className="intro-layer" data-animation="fadeInUp">
-                                                                <a href="" className="theme_button color2 two_lines_button">
-                                                                    About FUTO
-                                                                </a>
-                                                            </div>
-                                                        </div>
-                                                        {/* <!-- eof .slide_description --> */}
-                                                    </div>
-                                                    {/* <!-- eof .slide_description_wrapper --> */}
-                                                </div>
-                                                {/* <!-- eof .col-* --> */}
-                                            </div>
-                                            {/* <!-- eof .row --> */}
-                                        </div>
-                                        {/* <!-- eof .container --> */}
-                                    </li>
-
-                                </ul>
+                                    ))}
+                                </Fade>
                             </div>
-                            {/* <!-- eof flexslider --> */}
-
                         </section>
 
                         {/* <!-- icon-background-teaser --> */}
@@ -373,7 +340,7 @@ export default function Home() {
                                                     Enter Email here to be updated. We promise not to send you spam!
                                                 </p>
                                                 <div className="form-group">
-                                                    <label for="mailchimp" className="sr-only">Enter your email here</label>
+                                                    <label htmlFor="mailchimp" className="sr-only">Enter your email here</label>
                                                     <i className="flaticon-envelope icon2-"></i>
                                                     <input name="email" type="email" id="mailchimp"
                                                         className="mailchimp_email form-control" placeholder="Email Address" />
@@ -404,11 +371,6 @@ export default function Home() {
                     {/* <!-- eof #box_wrapper --> */}
                 </div>
                 {/* <!-- eof #canvas --> */}
-
-                {/* <script data-cfasync="false" src="../cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
-	<script src="js/compressed.js"></script>
-	<script src="js/main.js"></script> */}
-
             </div>
         </>
     );

@@ -11,7 +11,7 @@ export default function StaffLogin() {
 
     function handleSubmit(e) {
         e.preventDefault();
-        fetch('https://tps-api-852849bdc6c6.herokuapp.com/login-staff', {
+        fetch('/api/login-staff', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email: email, password: password })

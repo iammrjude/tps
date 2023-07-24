@@ -68,7 +68,7 @@ export default function UploadResult() {
                                 <td>
                                     <select name="ctl00$ContentPlaceHolder1$ddlSession" id="ctl00_ContentPlaceHolder1_ddlSession"
                                         className="form-control" onChange="updateClassOptions()" disabled>
-                                        <option selected="selected" value="Select Session">Select Session</option>
+                                        <option defaultValue="Select Session">Select Session</option>
                                         <option value="2001-2002">2001-2002</option>
                                         <option value="2002-2003">2002-2003</option>
                                         <option value="2003-2004">2003-2004</option>
