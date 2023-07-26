@@ -1,6 +1,102 @@
 import Head from "next/head";
+import { useEffect, useState } from 'react';
 
 export default function UploadResult() {
+    const [facultySelectedValue, setFacultySelectedValue] = useState('');
+    const [departmentSelectedValue, setDepartmentSelectedValue] = useState('');
+    const [sessionSelectedValue, setSessionSelectedValue] = useState('');
+    const [classSelectedValue, setClassSelectedValue] = useState('');
+    const [semesterSelectedValue, setSemesterSelectedValue] = useState('');
+    const [courseSelectedValue, setCourseSelectedValue] = useState('');
+    const [isDepartmentDisabled, setIsDepartmentDisabled] = useState(true);
+    const [isSessionDisabled, setIsSessionDisabled] = useState(true);
+    const [isClassDisabled, setIsClassDisabled] = useState(true);
+    const [isSemesterDisabled, setIsSemesterDisabled] = useState(true);
+    const [isCourseDisabled, setIsCourseDisabled] = useState(true);
+    const [dataArray, setDataArray] = useState(null);
+    const [uploadButtonDisabled, setUploadButtonDisabled] = useState(true);
+    const [message, setMessage] = useState('');
+
+    function updateDepartmentOptions() {
+        if (facultySelectedValue === "SEET") {
+            setIsDepartmentDisabled(false);
+        } else {
+            setFacultySelectedValue('Select Faculty');
+            setIsDepartmentDisabled(true);
+        }
+    }
+    function updateSessionOptions() {
+        if (departmentSelectedValue === "EEE") {
+            setIsSessionDisabled(false);
+        } else {
+            setDepartmentSelectedValue('Select Department');
+            setIsSessionDisabled(true);
+        }
+    }
+    function updateClassOptions() {
+        if (sessionSelectedValue === "2017-2018") {
+            setIsClassDisabled(false);
+        } else {
+            setSessionSelectedValue('Select Session');
+            setIsClassDisabled(true);
+        }
+    }
+    function updateSemesterOptions() {
+        if (classSelectedValue === "100Level") {
+            setIsSemesterDisabled(false);
+        } else {
+            setClassSelectedValue('Select Class');
+            setIsSemesterDisabled(true);
+        }
+    }
+    function updateCourseOptions() {
+        if (semesterSelectedValue === "1") {
+            setIsCourseDisabled(false);
+        } else {
+            setSemesterSelectedValue('Select Semester');
+            setIsCourseDisabled(true);
+        }
+    }
+    async function handleGetDataArray() {
+        const faculty = facultySelectedValue;
+        const department = departmentSelectedValue;
+        const level = classSelectedValue;
+        const course = courseSelectedValue;
+        if (courseSelectedValue !== "Select Course") {
+            const response = await fetch(`/api/get-rows?faculty=${faculty}&department=${department}&level=${level}&course=${course}`, {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' }
+            });
+            const jsonResponse = await response.json();
+            setUploadButtonDisabled(false);
+            return jsonResponse.data;
+        } else {
+            setUploadButtonDisabled(true);
+        }
+    }
+
+    // Function to handle grade changes
+    function handleGradeChange(index, value) {
+        const updatedDataArray = [...dataArray];
+        updatedDataArray[index].grade = value;
+        setDataArray(updatedDataArray);
+    };
+
+    useEffect(() => {
+        updateDepartmentOptions();
+        updateSessionOptions();
+        updateClassOptions();
+        updateSemesterOptions();
+        updateCourseOptions();
+    }, [facultySelectedValue, departmentSelectedValue, sessionSelectedValue, classSelectedValue, semesterSelectedValue, courseSelectedValue]);
+
+    useEffect(() => {
+        handleGetDataArray()
+            .then((dataArray) => {
+                setDataArray(dataArray);
+            });
+    }, [courseSelectedValue]);
+
     return (
         <>
             <Head>
@@ -27,7 +123,7 @@ export default function UploadResult() {
                                 <td>Faculty</td>
                                 <td>
                                     <select name="ctl00$ContentPlaceHolder1$ddlFaculty" id="ctl00_ContentPlaceHolder1_ddlFaculty"
-                                        className="form-control" onChange="updateDepartmentOptions()">
+                                        className="form-control" value={facultySelectedValue} onChange={(e) => setFacultySelectedValue(e.target.value)}>
                                         <option value="Select Faculty">Select Faculty</option>
                                         <option value="SAAT">School of Agriculture And Agricultural Technology (SAAT)</option>
                                         <option value="SBMS">School of Basic Medical Science (SBMS)</option>
@@ -48,7 +144,7 @@ export default function UploadResult() {
                                 <td>Department</td>
                                 <td>
                                     <select name="ctl00$ContentPlaceHolder1$ddlDepartment" id="ctl00_ContentPlaceHolder1_ddlDepartment"
-                                        className="form-control" onChange="updateSessionOptions()" disabled>
+                                        className="form-control" value={departmentSelectedValue} onChange={(e) => setDepartmentSelectedValue(e.target.value)} disabled={isDepartmentDisabled}>
                                         <option value="Select Department">Select Department</option>
                                         <option value="ABE">Agricultural and Bio resources Engineering</option>
                                         <option value="CHE">Chemical Engineering</option>
@@ -67,7 +163,7 @@ export default function UploadResult() {
                                 <td>Session</td>
                                 <td>
                                     <select name="ctl00$ContentPlaceHolder1$ddlSession" id="ctl00_ContentPlaceHolder1_ddlSession"
-                                        className="form-control" onChange="updateClassOptions()" disabled>
+                                        className="form-control" value={sessionSelectedValue} onChange={(e) => setSessionSelectedValue(e.target.value)} disabled={isSessionDisabled}>
                                         <option defaultValue="Select Session">Select Session</option>
                                         <option value="2001-2002">2001-2002</option>
                                         <option value="2002-2003">2002-2003</option>
@@ -98,7 +194,7 @@ export default function UploadResult() {
                                 <td>Class</td>
                                 <td>
                                     <select name="ctl00$ContentPlaceHolder1$ddlClass" id="ctl00_ContentPlaceHolder1_ddlClass"
-                                        className="form-control" onChange="updateSemesterOptions()" disabled>
+                                        className="form-control" value={classSelectedValue} onChange={(e) => setClassSelectedValue(e.target.value)} disabled={isClassDisabled}>
                                         <option value="Select Class">Select Class</option>
                                         <option value="100Level">100 Level</option>
                                         <option value="200Level">200 Level</option>
@@ -112,7 +208,7 @@ export default function UploadResult() {
                                 <td>Semester</td>
                                 <td>
                                     <select name="ctl00$ContentPlaceHolder1$ddlSemester" id="ctl00_ContentPlaceHolder1_ddlSemester"
-                                        className="form-control" onChange="updateCourseOptions()" disabled>
+                                        className="form-control" value={semesterSelectedValue} onChange={(e) => setSemesterSelectedValue(e.target.value)} disabled={isSemesterDisabled}>
                                         <option value="Select Semester">Select Semester</option>
                                         <option value="1">Harmattan Semester</option>
                                         <option value="2">Rain Semester</option>
@@ -123,7 +219,7 @@ export default function UploadResult() {
                                 <td>Course</td>
                                 <td>
                                     <select name="ctl00$ContentPlaceHolder1$ddlCourse" id="ctl00_ContentPlaceHolder1_ddlCourse"
-                                        className="form-control" onChange="handleGetDataArray()" disabled>
+                                        className="form-control" value={courseSelectedValue} onChange={(e) => setCourseSelectedValue(e.target.value)} disabled={isCourseDisabled}>
                                         <option value="Select Course">Select Course</option>
                                         <option value="GST101">Use of English 1</option>
                                         <option value="GST103">Humanities 1</option>
@@ -152,11 +248,37 @@ export default function UploadResult() {
                                     <th>Grade</th>
                                 </tr>
                             </thead>
-                            <tbody id="tableBody"></tbody>
+                            <tbody id="tableBody">
+                                {dataArray && (
+                                    dataArray.map((element, index) => {
+                                        return (
+                                            <tr key={index}>
+                                                <td>{index}</td>
+                                                <td>
+                                                    <input type="text" name="studentId" value={element.studentId} placeholder="studentId" readOnly />
+                                                </td>
+                                                <td>
+                                                    <input type="text" name="fullName" value={element.fullName} placeholder="FullName" readOnly />
+                                                </td>
+                                                <td>
+                                                    <input type="text" name="courseCode" value={element.courseCode} placeholder="Course" readOnly />
+                                                </td>
+                                                <td>
+                                                    <input type="text" name="unit" value={element.unit} placeholder="Unit" readOnly />
+                                                </td>
+                                                <td>
+                                                    <input type="text" name="grade" value={element.grade} onChange={(e) => handleGradeChange(index, e.target.value)} placeholder="Grade" required />
+                                                </td>
+                                            </tr>
+                                        )
+                                    })
+                                )
+                                }
+                            </tbody>
                         </table>
                     </div>
                     <br />
-                    <button className="btn btn-success" id="uploadButton" onClick="handleUploadResult()" disabled>Upload</button>
+                    <button className="btn btn-success" id="uploadButton" disabled={uploadButtonDisabled}>Upload</button>
                 </div>
             </div>
         </>

@@ -20,15 +20,15 @@ export default async function handler(req, res) {
     if (req.method != 'GET') {
         return res.status(405).json({ success: false, message: 'Method not allowed' });
     }
-    const { faculty, department, session, level, semester, course } = req.params;
-    async function getDataArray(faculty, department, session, level, semester, course) {
-        const allStudents = await Student.find({ faculty, department, 'registeredCourses.session': session, 'registeredCourses.level': level, 'registeredCourses.semesters.semesterNumber': semester, 'registeredCourses.semesters.courses.courseCode': course });
-        const regNumbers = allStudents.map((student) => student.regNumber);
+    const { faculty, department, level, course } = req.query;
+    async function getDataArray(faculty, department, level, course) {
+        const allStudents = await Student.find({ faculty, department });
+        const regNumbers = allStudents.map((student) => student.studentId);
         const fNames = allStudents.map((student) => student.fname);
         const middleNames = allStudents.map((student) => student.middleName);
         const lNames = allStudents.map((student) => student.lname);
         let courses;
-        if (level == "100Level" && semester == 1) {
+        if (level == "100Level") {
             courses = [
                 { 'GST101': 2 },
                 { 'GST103': 1 },
@@ -53,11 +53,11 @@ export default async function handler(req, res) {
 
         let dataArray = [];
         for (let index = 0; index < regNumbers.length; index++) {
-            const fullname = `${fNames[index]} ${middleNames[index]} ${lNames[index]}`;
+            const fullName = `${fNames[index]} ${middleNames[index]} ${lNames[index]}`;
             const data = {
-                matricnum: regNumbers[index],
-                fullname: fullname,
-                coursecode: course,
+                studentId: regNumbers[index],
+                fullName: fullName,
+                courseCode: course,
                 unit: unit,
                 grade: ""
             }
@@ -67,8 +67,8 @@ export default async function handler(req, res) {
     }
 
     try {
-        const dataArray = await getDataArray(faculty, department, session, level, semester, course);
-        res.status(200).json(createApiResponse(true, 'Data retrieved successfully', dataArray));
+        const dataArray = await getDataArray(faculty, department, level, course);
+        res.status(200).json({ success: true, message: 'Data retrieved successfully', data: dataArray });
     } catch (error) {
         console.error('Error while trying to get rows:', error);
         res.status(500).json({ success: false, message: 'Internal server error' });

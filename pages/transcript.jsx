@@ -63,7 +63,7 @@ export default function Transcript() {
                                             <td className="border border-black" id="fullName"></td>
                                             <td className="border border-black" id="sex"></td>
                                             <td className="border border-black" id="dob"></td>
-                                            <td className="border border-black" id="regNumber"></td>
+                                            <td className="border border-black" id="studentId"></td>
                                         </tr>
                                     </tbody>
                                     <thead>

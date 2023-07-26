@@ -114,31 +114,6 @@ export default function TpsLogin() {
                                                                 Welcome to FUTO Transcript Processing and Result Verification System
                                                             </div>
                                                             <div>
-                                                                <div style={{ width: "380px", height: "auto", float: "left" }}>
-                                                                    <p>
-                                                                        <a href="">
-                                                                            <input name="transcript" type="image"
-                                                                                title="Click here to register" src="images/apply4.jpg"
-                                                                                style={{ width: "380px", height: "125px" }} />
-                                                                        </a>
-                                                                    </p>
-                                                                    <p>You can apply for and follow the status of your Academic
-                                                                        Transcripts.
-                                                                    </p>
-                                                                    <p> To apply, simply register or login with your Account
-                                                                        Information.
-                                                                    </p>
-                                                                    <br />
-                                                                    <p>
-                                                                        <a href="">
-                                                                            <input name="verify" type="image"
-                                                                                title="Click here to verify" src="images/verified9.jpg"
-                                                                                style={{ width: "380px", height: "125px" }} />
-                                                                        </a>
-                                                                    </p>
-                                                                    <p>Institutions receiving Academic Transcript can verify the
-                                                                        authenticity of the transcript and other documents.</p>
-                                                                </div>
                                                                 <form name="tpsForm" id="tpsForm" encType="multipart/form-data" onSubmit={handleSubmit}>
                                                                     <p style={{ height: "25px", width: "410px", marginLeft: "100px", float: "left", color: "#F00" }}></p>
                                                                     <div title="Account Information"

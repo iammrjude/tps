@@ -6,14 +6,13 @@ const resultSchema = new mongoose.Schema({
     department: { type: String, required: true },
     session: { type: String, required: true },
     level: { type: String, required: true },
-    semester: { type: Number, required: true },
-    regNumber: { type: Number, required: true },
-    semesterResult: [{
+    studentId: { type: Number, required: true },
+    sessionResult: [[{
         courseCode: { type: String, required: true },
         courseTitle: { type: String, required: true },
         unit: { type: Number, required: true },
         grade: { type: String, required: true },
-    }],
+    }]],
 });
 
 // Create the Result model using the schema
@@ -41,7 +40,7 @@ const studentSchema = new mongoose.Schema({
     lname: { type: String, required: true },
     sex: { type: String, required: true },
     dob: { type: String, required: true },
-    regNumber: { type: Number, required: true },
+    studentId: { type: Number, required: true },
     nationality: { type: String, required: true },
     stateOfOrigin: { type: String, required: true },
     dateOfEntry: { type: String, required: true },

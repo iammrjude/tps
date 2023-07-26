@@ -7,7 +7,7 @@ export default function TpsDashboard() {
     const [firstName, setFirstName] = useState('');
     const [middleName, setMiddleName] = useState('');
     const [lastName, setLastName] = useState('');
-    const [regNumber, setRegNumber] = useState('');
+    const [studentId, setStudentId] = useState('');
     const [email, setEmail] = useState('');
     const [programSelectedValue, setProgramSelectedValue] = useState('');
     const [facultySelectedValue, setFacultySelectedValue] = useState('');
@@ -26,7 +26,7 @@ export default function TpsDashboard() {
         setFirstName(studentInfo.data.fname);
         setMiddleName(studentInfo.data.middleName);
         setLastName(studentInfo.data.lname);
-        setRegNumber(studentInfo.data.regNumber);
+        setStudentId(studentInfo.data.studentId);
         setEmail(studentInfo.data.email);
     }
 
@@ -167,7 +167,7 @@ export default function TpsDashboard() {
                                                                                 <label htmlFor='RegNumber' title='Your Registration Number'>REG. NUMBER:</label>
                                                                             </td>
                                                                             <td>
-                                                                                <input readOnly autoComplete='off' id='RegNumber' name='RegNumber' type='text' value={regNumber} style={{ width: "200px", resize: 'none', }} />
+                                                                                <input readOnly autoComplete='off' id='RegNumber' name='RegNumber' type='text' value={studentId} style={{ width: "200px", resize: 'none', }} />
                                                                             </td>
                                                                             <td style={{ width: "100px", textAlign: "right" }}>
                                                                                 <label htmlFor="Email" title="Your Valid E-Mail Address as Verification will be required.">EMAIL ADDRESS:</label>
