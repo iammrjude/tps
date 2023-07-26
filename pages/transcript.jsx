@@ -12,6 +12,7 @@ export default function Transcript() {
     const [stateOfOrigin, setStateOfOrigin] = useState('');
     const [dateOfEntry, setDateOfEntry] = useState('');
     const [modeOfEntry, setModeOfEntry] = useState('');
+    const [faculty, setFaculty] = useState('');
     const [department, setDepartment] = useState('');
     const [option, setOption] = useState('');
 
@@ -32,6 +33,7 @@ export default function Transcript() {
         setDateOfEntry(studentInfo.dateOfEntry);
         setModeOfEntry(studentInfo.modeOfEntry);
         setDepartment(studentInfo.department);
+        setFaculty(studentInfo.faculty);
         setOption(studentInfo.option);
     }
 
@@ -182,7 +184,7 @@ export default function Transcript() {
                                             <td className="border border-black"></td>
                                         </tr>
                                         <tr>
-                                            <td className="border border-black" id="faculty"></td>
+                                            <td className="border border-black" id="faculty">{faculty}</td>
                                             <td className="border border-black font-bold text-black">Option:</td>
                                             <td className="border border-black" id="option">{option}</td>
                                             <td className="border border-black"></td>
