@@ -23,9 +23,9 @@ export default async function handler(req, res) {
     async function getDataArray(faculty, department, level, course) {
         const allStudents = await Student.find({ faculty, department });
         const regNumbers = allStudents.map((student) => student.studentId);
-        const fNames = allStudents.map((student) => student.fname);
+        const fNames = allStudents.map((student) => student.firstName);
         const middleNames = allStudents.map((student) => student.middleName);
-        const lNames = allStudents.map((student) => student.lname);
+        const lNames = allStudents.map((student) => student.lastName);
         let courses;
         if (level == "100Level") {
             courses = [

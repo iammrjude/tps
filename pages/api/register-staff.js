@@ -21,7 +21,7 @@ export default async function handler(req, res) {
     if (req.method != 'POST') {
         return res.status(405).json({ success: false, message: 'Method not allowed' });
     }
-    const { fname, lname, email, password } = req.body;
+    const { firstName, middleName, lastName, email, password } = req.body;
 
     try {
         // Check if the email already exists
@@ -34,7 +34,7 @@ export default async function handler(req, res) {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         // Create a new Staff document
-        const newStaff = new Staff({ fname, lname, email, password: hashedPassword });
+        const newStaff = new Staff({ firstName, middleName, lastName, email, password: hashedPassword });
         // Save the new staff member to the database
         await newStaff.save();
         res.status(200).json({ success: true, message: 'Registration successful' });

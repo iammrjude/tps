@@ -22,8 +22,9 @@ const Result = mongoose.models.Result
 
 // Define the schema for the Staff model
 const staffSchema = new mongoose.Schema({
-    fname: { type: String, required: true },
-    lname: { type: String, required: true },
+    firstName: { type: String, required: true },
+    middleName: { type: String, required: true },
+    lastName: { type: String, required: true },
     email: { type: String, required: true },
     password: { type: String, required: true },
 });
@@ -35,9 +36,9 @@ const Staff = mongoose.models.Staff
 
 // Define the schema for the Student model
 const studentSchema = new mongoose.Schema({
-    fname: { type: String, required: true },
+    firstName: { type: String, required: true },
     middleName: { type: String, required: true },
-    lname: { type: String, required: true },
+    lastName: { type: String, required: true },
     sex: { type: String, required: true },
     dob: { type: String, required: true },
     studentId: { type: Number, required: true },

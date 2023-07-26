@@ -58,7 +58,7 @@ export default function Home() {
                                                 <a href="./staff-login" className="small-text theme_button color2 two_lines_button">Result Upload</a>
                                             </li>
                                             <li>
-                                                <a href="./tps-login" className="small-text theme_button color2 two_lines_button">Transcript</a>
+                                                <a href="./login-student" className="small-text theme_button color2 two_lines_button">Transcript</a>
                                             </li>
                                         </ul>
                                     </div>
@@ -132,7 +132,7 @@ export default function Home() {
                                                     <a href="./staff-login" className="small-text medium theme_button color2 two_lines_button">Result Upload</a>
                                                 </li>
                                                 <li>
-                                                    <a href="./tps-login" className="small-text medium theme_button color2 two_lines_button">Transcript</a>
+                                                    <a href="./login-student" className="small-text medium theme_button color2 two_lines_button">Transcript</a>
                                                 </li>
                                             </ul>
                                         </div>

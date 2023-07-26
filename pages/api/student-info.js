@@ -29,7 +29,7 @@ export default async function handler(req, res) {
             return res.status(404).json({ success: false, message: 'Student not found' });
         }
 
-        const studentInfo = { lname: student.lname, fname: student.fname, middleName: student.middleName, sex: student.sex, dob: student.dob, nationality: student.nationality, stateOfOrigin: student.stateOfOrigin, dateOfEntry: student.dateOfEntry, modeOfEntry: student.modeOfEntry, studentId: student.studentId, email: student.email, faculty: student.faculty, department: student.department, };
+        const studentInfo = { lastName: student.lastName, firstName: student.firstName, middleName: student.middleName, sex: student.sex, dob: student.dob, nationality: student.nationality, stateOfOrigin: student.stateOfOrigin, dateOfEntry: student.dateOfEntry, modeOfEntry: student.modeOfEntry, studentId: student.studentId, email: student.email, faculty: student.faculty, department: student.department, };
         res.status(200).json({ success: true, message: 'Student Info retrieved successfully', data: studentInfo });
     } catch (error) {
         console.error('Error while trying to get student info:', error);

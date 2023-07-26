@@ -23,9 +23,9 @@ export default function TpsDashboard() {
         const studentInfo = await response.json();
 
         // Populate the form fields with the student data
-        setFirstName(studentInfo.data.fname);
+        setFirstName(studentInfo.data.firstName);
         setMiddleName(studentInfo.data.middleName);
-        setLastName(studentInfo.data.lname);
+        setLastName(studentInfo.data.lastName);
         setStudentId(studentInfo.data.studentId);
         setEmail(studentInfo.data.email);
     }
@@ -36,8 +36,8 @@ export default function TpsDashboard() {
         if (studentEmail) {
             getStudentInfo(studentEmail)
         } else {
-            // Redirect to tps-login page
-            router.push('/tps-login');
+            // Redirect to login-student page
+            router.push('/login-student');
         }
     }, []);
 

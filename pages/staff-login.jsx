@@ -119,7 +119,7 @@ export default function StaffLogin() {
 
                             <p className="message text-left text-bold">
                                 <b><a href="">Forgot Password</a></b>
-                                <br /><span className="text-muted">First time here? </span><a href="">Verify your account</a>
+                                <br /><span className="text-muted">First time here? </span><a href="/register-staff">Register</a>
                             </p>
                             <p>
                                 <br />

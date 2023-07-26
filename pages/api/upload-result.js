@@ -147,7 +147,7 @@ export default async function handler(req, res) {
             const firstYearResultData = {
                 faculty: faculty,
                 department: department,
-                session: '2017-2018',
+                session: '2017/2018',
                 level: '100Level',
                 studentId: studentId,
                 sessionResult: firstYear,
@@ -163,7 +163,7 @@ export default async function handler(req, res) {
             const secondYearResultData = {
                 faculty: faculty,
                 department: department,
-                session: '2018-2019',
+                session: '2018/2019',
                 level: '200Level',
                 studentId: studentId,
                 sessionResult: secondYear,
@@ -179,7 +179,7 @@ export default async function handler(req, res) {
             const thirdYearResultData = {
                 faculty: faculty,
                 department: department,
-                session: '2019-2020',
+                session: '2019/2020',
                 level: '300Level',
                 studentId: studentId,
                 sessionResult: thirdYear,
@@ -195,7 +195,7 @@ export default async function handler(req, res) {
             const fourthYearResultData = {
                 faculty: faculty,
                 department: department,
-                session: '2020-2021',
+                session: '2020/2021',
                 level: '400Level',
                 studentId: studentId,
                 sessionResult: fourthYear,
@@ -211,7 +211,7 @@ export default async function handler(req, res) {
             const finalYearResultData = {
                 faculty: faculty,
                 department: department,
-                session: '2021-2022',
+                session: '2021/2022',
                 level: '500Level',
                 studentId: studentId,
                 sessionResult: finalYear,

@@ -22,7 +22,7 @@ export default function Transcript() {
         });
         const jsonResponse = await response.json();
         const studentInfo = jsonResponse.data;
-        const studentName = `${studentInfo.fname} ${studentInfo.middleName} ${studentInfo.lname}`;
+        const studentName = `${studentInfo.firstName} ${studentInfo.middleName} ${studentInfo.lastName}`;
         setFullName(studentName);
         setSex(studentInfo.sex);
         setDob(studentInfo.dob);
@@ -75,8 +75,6 @@ export default function Transcript() {
             totalGradePoints,
         };
     }
-
-
 
     useEffect(() => {
         getStudentInfo('victorgeorge@example.com');
@@ -131,6 +129,7 @@ export default function Transcript() {
             <div className="flex justify-center items-center">
                 <div className="flex flex-col items-center text-center">
                     {sessionsArray.map((session, index) => {
+                        const currentSession = session.session;
                         const sessionResult = session.sessionResult;
                         const firstSemester = sessionResult[0];
                         const secondSemester = sessionResult[1];
@@ -203,10 +202,22 @@ export default function Transcript() {
                                             <th className="border border-black">Cum G.P.A.</th>
                                         </tr>
                                     </thead>
+                                    {index > 0 && (
+                                        <tbody>
+                                            <tr>
+                                                <td className="border border-black border-r-1 border-l-1 border-t-0 border-b-0"></td>
+                                                <td className="border border-black border-r-1 border-l-1 border-t-0 border-b-0">{currentSession} B/F</td>
+                                                <td className="border border-black border-r-1 border-l-1 border-t-0 border-b-0"></td>
+                                                <td className="border border-black border-r-1 border-l-1 border-t-0 border-b-0"></td>
+                                                <td className="border border-black border-r-1 border-l-1 border-t-0 border-b-0"></td>
+                                                <td className="border border-black border-r-1 border-l-1 border-t-0 border-b-0"></td>
+                                            </tr>
+                                        </tbody>
+                                    )}
                                     <tbody>
                                         <tr>
                                             <td className="border border-black border-r-1 border-l-1 border-t-0 border-b-0"></td>
-                                            <td className="border border-black border-r-1 border-l-1 border-t-0 border-b-0">2017/2018 HARMATTAN SEMESTER</td>
+                                            <td className="border border-black border-r-1 border-l-1 border-t-0 border-b-0">{currentSession} HARMATTAN SEMESTER</td>
                                             <td className="border border-black border-r-1 border-l-1 border-t-0 border-b-0"></td>
                                             <td className="border border-black border-r-1 border-l-1 border-t-0 border-b-0"></td>
                                             <td className="border border-black border-r-1 border-l-1 border-t-0 border-b-0"></td>
@@ -245,7 +256,7 @@ export default function Transcript() {
                                     <tbody>
                                         <tr>
                                             <td className="border border-black border-r-1 border-l-1 border-t-0 border-b-0"></td>
-                                            <td className="border border-black border-r-1 border-l-1 border-t-0 border-b-0">2017/2018 RAIN SEMESTER</td>
+                                            <td className="border border-black border-r-1 border-l-1 border-t-0 border-b-0">{currentSession} RAIN SEMESTER</td>
                                             <td className="border border-black border-r-1 border-l-1 border-t-0 border-b-0"></td>
                                             <td className="border border-black border-r-1 border-l-1 border-t-0 border-b-0"></td>
                                             <td className="border border-black border-r-1 border-l-1 border-t-0 border-b-0"></td>

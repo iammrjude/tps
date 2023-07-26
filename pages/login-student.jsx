@@ -149,7 +149,7 @@ export default function TpsLogin() {
                                                                                     <td colSpan="2">
                                                                                         <div className="left">
                                                                                             <p>
-                                                                                                <a href="">Register</a> | <a href="">Forgot Password?</a>
+                                                                                                <a href="/register-student">Register</a> | <a href="">Forgot Password?</a>
                                                                                             </p>
                                                                                             <br />
                                                                                         </div>
