@@ -1,4 +1,5 @@
 import Head from "next/head";
+import Link from "next/link";
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 
@@ -149,7 +150,7 @@ export default function TpsLogin() {
                                                                                     <td colSpan="2">
                                                                                         <div className="left">
                                                                                             <p>
-                                                                                                <a href="/register-student">Register</a> | <a href="">Forgot Password?</a>
+                                                                                                <Link href="/register-student">Register</Link> | <Link href="">Forgot Password?</Link>
                                                                                             </p>
                                                                                             <br />
                                                                                         </div>

@@ -1,4 +1,5 @@
 import Head from "next/head";
+import Link from "next/link";
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 
@@ -52,14 +53,14 @@ export default function RegisterStudent() {
                 <div className="outer">
                     <div className="outer__inner">
                         <div className="login">
-                            <div className="login__col" style={{ backgroundImage: "url('images/about.jpg');" }}>
+                            <div className="login__col" style={{ backgroundImage: "url('images/about.jpg')" }}>
                                 <a className="login__logo" href="../index.html">
                                     <img src="/images/logo.png" alt="Logo" />
                                     <img src="/images/logo.png" alt="Logo" />
                                 </a>
                             </div>
                             <div className="login__col">
-                                <div className="login__head">Already have an account?<a className="login__link" href="/login-student">Login</a></div>
+                                <div className="login__head">Already have an account?<Link className="login__link" href="/login-student">Login</Link></div>
                                 <div className="login__wrap">
                                     <div className="registration">
                                         <form id="registrationForm" onSubmit={handleSubmit}>
