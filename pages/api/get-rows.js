@@ -4,7 +4,6 @@ dotenv.config();
 import { Student } from '../../models/models';
 const dbURI = process.env.CONNECTION_STRING;
 
-// Staff Login route
 export default async function handler(req, res) {
     if (!mongoose.connections[0].readyState) {
         try {

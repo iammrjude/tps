@@ -1,30 +1,124 @@
 import Head from "next/head";
 import 'tailwindcss/tailwind.css';
+import { useEffect, useState } from 'react';
 
 export default function Transcript() {
-    const firstSemester = [
-        { courseCode: "GST101", courseTitle: "Use of English I", unit: 2, grade: "A" },
-        { courseCode: "GST103", courseTitle: "Humanities I", unit: 1, grade: "A" },
-        { courseCode: "MTH101", courseTitle: "Elementary Mathematics I", unit: 4, grade: "A" },
-        { courseCode: "PHY101", courseTitle: "General Physics I", unit: 4, grade: "A" },
-        { courseCode: "CHM101", courseTitle: "General Chemistry I", unit: 4, grade: "A" },
-        { courseCode: "BIO101", courseTitle: "Biology for Physical Sciences", unit: 3, grade: "A" },
-        { courseCode: "ENG101", courseTitle: "Workshop Practice I", unit: 1, grade: "A" },
-        { courseCode: "ENG103", courseTitle: "Engineering Drawing I", unit: 1, grade: "A" },
-        { courseCode: "FRN101", courseTitle: "Use of French I", unit: 1, grade: "A" },
-    ];
-    const secondSemester = [
-        { courseCode: "GST102", courseTitle: "Use of English II", unit: 2, grade: "A" },
-        { courseCode: "GST108", courseTitle: "Social Science I", unit: 2, grade: "A" },
-        { courseCode: "GST110", courseTitle: "Science, Technology & Society", unit: 1, grade: "A" },
-        { courseCode: "MTH102", courseTitle: "Elementary Mathematics II", unit: 4, grade: "A" },
-        { courseCode: "PHY102", courseTitle: "General Physics II", unit: 4, grade: "A" },
-        { courseCode: "CHM102", courseTitle: "General Chemistry II", unit: 4, grade: "A" },
-        { courseCode: "ENG102", courseTitle: "Workshop Practice II", unit: 1, grade: "A" },
-        { courseCode: "ENG104", courseTitle: "Engineering Drawing II", unit: 1, grade: "A" },
-        { courseCode: "FRN102", courseTitle: "Use of French II", unit: 1, grade: "A" },
-    ];
-    const sessions = [[firstSemester, secondSemester], [firstSemester, secondSemester]];
+    const [sessionsArray, setSessionsArray] = useState([]);
+    const [fullName, setFullName] = useState('');
+    const [sex, setSex] = useState('');
+    const [dob, setDob] = useState('');
+    const [studentId, setStudentId] = useState('');
+    const [nationality, setNationality] = useState('');
+    const [stateOfOrigin, setStateOfOrigin] = useState('');
+    const [dateOfEntry, setDateOfEntry] = useState('');
+    const [modeOfEntry, setModeOfEntry] = useState('');
+    const [department, setDepartment] = useState('');
+    const [option, setOption] = useState('');
+
+    async function getStudentInfo(studentEmail) {
+        const response = await fetch(`/api/student-info?email=${studentEmail}`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        });
+        const jsonResponse = await response.json();
+        const studentInfo = jsonResponse.data;
+        const studentName = `${studentInfo.fname} ${studentInfo.middleName} ${studentInfo.lname}`;
+        setFullName(studentName);
+        setSex(studentInfo.sex);
+        setDob(studentInfo.dob);
+        setStudentId(studentInfo.studentId);
+        setNationality(studentInfo.nationality);
+        setStateOfOrigin(studentInfo.stateOfOrigin);
+        setDateOfEntry(studentInfo.dateOfEntry);
+        setModeOfEntry(studentInfo.modeOfEntry);
+        setDepartment(studentInfo.department);
+        setOption(studentInfo.option);
+    }
+
+    async function getStudentRecord(faculty, department, studentId) {
+        const response = await fetch(`/api/get-student-record?faculty=${faculty}&department=${department}&studentId=${studentId}`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        });
+        const jsonResponse = await response.json();
+        const sessionResultData = jsonResponse.data;
+        setSessionsArray(sessionResultData);
+    }
+
+    function calculateTotalUnits(semester) {
+        let totalUnits = 0;
+        let totalGradePoints = 0;
+
+        semester.forEach((course) => {
+            totalUnits += course.unit;
+
+            // Calculate grade points for each course
+            let points;
+            if (course.grade === "A") {
+                points = 5;
+            } else if (course.grade === "B") {
+                points = 4;
+            } else if (course.grade === "C") {
+                points = 3;
+            } else if (course.grade === "D") {
+                points = 2;
+            } else if (course.grade === "E") {
+                points = 1;
+            } else if (course.grade === "F") {
+                points = 0;
+            }
+            totalGradePoints += course.unit * points;
+        });
+
+        return {
+            totalUnits,
+            totalGradePoints,
+        };
+    }
+
+
+
+    useEffect(() => {
+        getStudentInfo('victorgeorge@example.com');
+        getStudentRecord('SEET', 'EEE', '20171087537');
+    }, []);
+
+    useEffect(() => {
+        sessionsArray.forEach((session, index) => {
+            const firstSemester = session.sessionResult[0];
+            const secondSemester = session.sessionResult[1];
+
+            const firstSemesterResults = calculateTotalUnits(firstSemester);
+            const secondSemesterResults = calculateTotalUnits(secondSemester);
+
+            // Calculate final tnu for each session (for each semester separately)
+            const sessionTnu = firstSemesterResults.totalUnits + secondSemesterResults.totalUnits;
+
+            // Find the corresponding td element with ID "tnu" and update its content
+            const tnuElement = document.getElementById(`tnu-${index}`);
+            if (tnuElement) {
+                tnuElement.textContent = `TNU: ${sessionTnu}`;
+            }
+
+            // Calculate TGP for each session (for each semester separately)
+            const sessionTGP = firstSemesterResults.totalGradePoints + secondSemesterResults.totalGradePoints;
+
+            // Calculate CGPA for each session (for each semester separately)
+            const sessionCGPA = sessionTGP / (firstSemesterResults.totalUnits + secondSemesterResults.totalUnits);
+
+            // Find the corresponding td elements with IDs "tgp" and "cgpa" and update their content
+            const tgpElement = document.getElementById(`tgp-${index}`);
+            if (tgpElement) {
+                tgpElement.textContent = `TGP: ${sessionTGP.toFixed(2)}`;
+            }
+
+            const cgpaElement = document.getElementById(`cgpa-${index}`);
+            if (cgpaElement) {
+                cgpaElement.textContent = `CGPA: ${sessionCGPA.toFixed(2)}`;
+            }
+        });
+    }, [sessionsArray]);
+
     return (
         <div>
             <Head>
@@ -36,9 +130,10 @@ export default function Transcript() {
 
             <div className="flex justify-center items-center">
                 <div className="flex flex-col items-center text-center">
-                    {sessions.map((session, index) => {
-                        const firstSemester = session[0];
-                        const secondSemester = session[1];
+                    {sessionsArray.map((session, index) => {
+                        const sessionResult = session.sessionResult;
+                        const firstSemester = sessionResult[0];
+                        const secondSemester = sessionResult[1];
                         return (
                             <div key={index}>
                                 <h3 className="font-bold text-black my-1">FEDERAL UNIVERSITY OF TECHNOLOGY, OWERRI.</h3>
@@ -60,10 +155,10 @@ export default function Transcript() {
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td className="border border-black" id="fullName"></td>
-                                            <td className="border border-black" id="sex"></td>
-                                            <td className="border border-black" id="dob"></td>
-                                            <td className="border border-black" id="studentId"></td>
+                                            <td className="border border-black" id="fullName">{fullName}</td>
+                                            <td className="border border-black" id="sex">{sex}</td>
+                                            <td className="border border-black" id="dob">{dob}</td>
+                                            <td className="border border-black" id="studentId">{studentId}</td>
                                         </tr>
                                     </tbody>
                                     <thead>
@@ -76,21 +171,21 @@ export default function Transcript() {
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td className="border border-black" id="nationality"></td>
-                                            <td className="border border-black" id="stateOfOrigin"></td>
-                                            <td className="border border-black" id="dateOfEntry"></td>
-                                            <td className="border border-black" id="modeOfEntry"></td>
+                                            <td className="border border-black" id="nationality">{nationality}</td>
+                                            <td className="border border-black" id="stateOfOrigin">{stateOfOrigin}</td>
+                                            <td className="border border-black" id="dateOfEntry">{dateOfEntry}</td>
+                                            <td className="border border-black" id="modeOfEntry">{modeOfEntry}</td>
                                         </tr>
                                         <tr>
                                             <td className="border border-black font-bold text-black">School</td>
                                             <td className="border border-black font-bold text-black">Department:</td>
-                                            <td className="border border-black" id="department"></td>
+                                            <td className="border border-black" id="department">{department}</td>
                                             <td className="border border-black"></td>
                                         </tr>
                                         <tr>
                                             <td className="border border-black" id="faculty"></td>
                                             <td className="border border-black font-bold text-black">Option:</td>
-                                            <td className="border border-black" id="option"></td>
+                                            <td className="border border-black" id="option">{option}</td>
                                             <td className="border border-black"></td>
                                         </tr>
                                     </tbody>
@@ -119,28 +214,28 @@ export default function Transcript() {
                                         </tr>
                                     </tbody>
                                     <tbody>
-                                        {firstSemester.map((element, index) => {
+                                        {firstSemester.map((course, index) => {
                                             var points;
-                                            if (element.grade == "A") {
+                                            if (course.grade == "A") {
                                                 points = 5;
-                                            } else if (element.grade == "B") {
+                                            } else if (course.grade == "B") {
                                                 points = 4;
-                                            } else if (element.grade == "C") {
+                                            } else if (course.grade == "C") {
                                                 points = 3;
-                                            } else if (element.grade == "D") {
+                                            } else if (course.grade == "D") {
                                                 points = 2;
-                                            } else if (element.grade == "E") {
+                                            } else if (course.grade == "E") {
                                                 points = 1;
-                                            } else if (element.grade == "F") {
+                                            } else if (course.grade == "F") {
                                                 points = 0;
                                             }
-                                            const gradePoints = element.unit * points;
+                                            const gradePoints = course.unit * points;
                                             return (
                                                 <tr key={index}>
-                                                    <td className="border border-black border-r-1 border-l-1 border-t-0 border-b-0">{element.courseCode}</td>
-                                                    <td className="border border-black border-r-1 border-l-1 border-t-0 border-b-0">{element.courseTitle}</td>
-                                                    <td className="border border-black border-r-1 border-l-1 border-t-0 border-b-0">{element.unit}</td>
-                                                    <td className="border border-black border-r-1 border-l-1 border-t-0 border-b-0">{element.grade}</td>
+                                                    <td className="border border-black border-r-1 border-l-1 border-t-0 border-b-0">{course.courseCode}</td>
+                                                    <td className="border border-black border-r-1 border-l-1 border-t-0 border-b-0">{course.courseTitle}</td>
+                                                    <td className="border border-black border-r-1 border-l-1 border-t-0 border-b-0">{course.unit}</td>
+                                                    <td className="border border-black border-r-1 border-l-1 border-t-0 border-b-0">{course.grade}</td>
                                                     <td className="border border-black border-r-1 border-l-1 border-t-0 border-b-0">{gradePoints}</td>
                                                     <td className="border border-black border-r-1 border-l-1 border-t-0 border-b-0"></td>
                                                 </tr>
@@ -158,28 +253,28 @@ export default function Transcript() {
                                         </tr>
                                     </tbody>
                                     <tbody>
-                                        {secondSemester.map((element, index) => {
+                                        {secondSemester.map((course, index) => {
                                             var points;
-                                            if (element.grade == "A") {
+                                            if (course.grade == "A") {
                                                 points = 5;
-                                            } else if (element.grade == "B") {
+                                            } else if (course.grade == "B") {
                                                 points = 4;
-                                            } else if (element.grade == "C") {
+                                            } else if (course.grade == "C") {
                                                 points = 3;
-                                            } else if (element.grade == "D") {
+                                            } else if (course.grade == "D") {
                                                 points = 2;
-                                            } else if (element.grade == "E") {
+                                            } else if (course.grade == "E") {
                                                 points = 1;
-                                            } else if (element.grade == "F") {
+                                            } else if (course.grade == "F") {
                                                 points = 0;
                                             }
-                                            const gradePoints = element.unit * points;
+                                            const gradePoints = course.unit * points;
                                             return (
                                                 <tr key={index}>
-                                                    <td className="border border-black border-r-1 border-l-1 border-t-0 border-b-0">{element.courseCode}</td>
-                                                    <td className="border border-black border-r-1 border-l-1 border-t-0 border-b-0">{element.courseTitle}</td>
-                                                    <td className="border border-black border-r-1 border-l-1 border-t-0 border-b-0">{element.unit}</td>
-                                                    <td className="border border-black border-r-1 border-l-1 border-t-0 border-b-0">{element.grade}</td>
+                                                    <td className="border border-black border-r-1 border-l-1 border-t-0 border-b-0">{course.courseCode}</td>
+                                                    <td className="border border-black border-r-1 border-l-1 border-t-0 border-b-0">{course.courseTitle}</td>
+                                                    <td className="border border-black border-r-1 border-l-1 border-t-0 border-b-0">{course.unit}</td>
+                                                    <td className="border border-black border-r-1 border-l-1 border-t-0 border-b-0">{course.grade}</td>
                                                     <td className="border border-black border-r-1 border-l-1 border-t-0 border-b-0">{gradePoints}</td>
                                                     <td className="border border-black border-r-1 border-l-1 border-t-0 border-b-0"></td>
                                                 </tr>
@@ -198,10 +293,10 @@ export default function Transcript() {
                                         <tr>
                                             <td className="border border-black border-r-1 border-l-1 border-t-0"></td>
                                             <td className="border border-black border-r-1 border-l-1 border-t-0"></td>
-                                            <td className="border border-black border-r-1 border-l-1 border-t-0" id="tnu">TNU: </td>
+                                            <td className="border border-black border-r-1 border-l-1 border-t-0" id={`tnu-${index}`}>TNU: </td>
                                             <td className="border border-black border-r-1 border-l-1 border-t-0"></td>
-                                            <td className="border border-black border-r-1 border-l-1 border-t-0" id="tgp">TGP: </td>
-                                            <td className="border border-black border-r-1 border-l-1 border-t-0" id="cgpa">CGPA: </td>
+                                            <td className="border border-black border-r-1 border-l-1 border-t-0" id={`tgp-${index}`}>TGP: </td>
+                                            <td className="border border-black border-r-1 border-l-1 border-t-0" id={`cgpa-${index}`}>CGPA: </td>
                                         </tr>
                                     </tbody>
                                 </table>

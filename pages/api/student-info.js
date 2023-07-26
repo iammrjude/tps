@@ -4,7 +4,7 @@ dotenv.config();
 import { Student } from '../../models/models';
 const dbURI = process.env.CONNECTION_STRING;
 
-// Upload Result route
+// route to get student information
 export default async function handler(req, res) {
     if (!mongoose.connections[0].readyState) {
         try {
