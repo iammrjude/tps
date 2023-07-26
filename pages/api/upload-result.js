@@ -24,29 +24,28 @@ export default async function handler(req, res) {
 
     async function uploadResult(faculty, department, studentId) {
         try {
-            // const studentId = 20171087537;
             const firstYear = [
                 [
                     { courseCode: "GST101", courseTitle: "Use of English I", unit: 2, grade: "A" },
-                    { courseCode: "GST103", courseTitle: "Humanities I", unit: 1, grade: "A" },
+                    { courseCode: "GST103", courseTitle: "Humanities I", unit: 1, grade: "B" },
                     { courseCode: "MTH101", courseTitle: "Elementary Mathematics I", unit: 4, grade: "A" },
                     { courseCode: "PHY101", courseTitle: "General Physics I", unit: 4, grade: "A" },
-                    { courseCode: "CHM101", courseTitle: "General Chemistry I", unit: 4, grade: "A" },
-                    { courseCode: "BIO101", courseTitle: "Biology for Physical Sciences", unit: 3, grade: "A" },
-                    { courseCode: "ENG101", courseTitle: "Workshop Practice I", unit: 1, grade: "A" },
+                    { courseCode: "CHM101", courseTitle: "General Chemistry I", unit: 4, grade: "D" },
+                    { courseCode: "BIO101", courseTitle: "Biology for Physical Sciences", unit: 3, grade: "C" },
+                    { courseCode: "ENG101", courseTitle: "Workshop Practice I", unit: 1, grade: "B" },
                     { courseCode: "ENG103", courseTitle: "Engineering Drawing I", unit: 1, grade: "A" },
-                    { courseCode: "FRN101", courseTitle: "Use of French I", unit: 1, grade: "A" },
+                    { courseCode: "FRN101", courseTitle: "Use of French I", unit: 1, grade: "B" },
                 ],
                 [
-                    { courseCode: "GST102", courseTitle: "Use of English II", unit: 2, grade: "A" },
+                    { courseCode: "GST102", courseTitle: "Use of English II", unit: 2, grade: "C" },
                     { courseCode: "GST108", courseTitle: "Social Science I", unit: 2, grade: "A" },
-                    { courseCode: "GST110", courseTitle: "Science, Technology & Society", unit: 1, grade: "A" },
+                    { courseCode: "GST110", courseTitle: "Science, Technology & Society", unit: 1, grade: "B" },
                     { courseCode: "MTH102", courseTitle: "Elementary Mathematics II", unit: 4, grade: "A" },
-                    { courseCode: "PHY102", courseTitle: "General Physics II", unit: 4, grade: "A" },
+                    { courseCode: "PHY102", courseTitle: "General Physics II", unit: 4, grade: "B" },
                     { courseCode: "CHM102", courseTitle: "General Chemistry II", unit: 4, grade: "A" },
-                    { courseCode: "ENG102", courseTitle: "Workshop Practice II", unit: 1, grade: "A" },
+                    { courseCode: "ENG102", courseTitle: "Workshop Practice II", unit: 1, grade: "D" },
                     { courseCode: "ENG104", courseTitle: "Engineering Drawing II", unit: 1, grade: "A" },
-                    { courseCode: "FRN102", courseTitle: "Use of French II", unit: 1, grade: "A" },
+                    { courseCode: "FRN102", courseTitle: "Use of French II", unit: 1, grade: "C" },
                 ],
             ];
             const secondYear = [

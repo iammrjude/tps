@@ -77,8 +77,8 @@ export default function Transcript() {
     }
 
     useEffect(() => {
-        getStudentInfo('victorgeorge@example.com');
-        getStudentRecord('SEET', 'EEE', '20171087537');
+        getStudentInfo('jachimmabedeugwu@gmail.com');
+        getStudentRecord('SEET', 'EEE', '20171040323');
     }, []);
 
     useEffect(() => {

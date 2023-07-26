@@ -108,7 +108,7 @@ export default function RegisterStudent() {
                                                     <div className="field field_view">
                                                         <div className="field__label">Department</div>
                                                         <div className="field__wrap">
-                                                            <input className="field__input" type="text" name="department" id="department" placeholder="Electrical and Electronics Engineering" value={department} onChange={(e) => setDepartment(e.target.value)} required />
+                                                            <input className="field__input" type="text" name="department" id="department" placeholder="Electrical and Electronic Engineering" value={department} onChange={(e) => setDepartment(e.target.value)} required />
                                                         </div>
                                                     </div>
                                                     <div className="field field_view">

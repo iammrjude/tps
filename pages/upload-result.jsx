@@ -149,7 +149,7 @@ export default function UploadResult() {
                                         <option value="ABE">Agricultural and Bio resources Engineering</option>
                                         <option value="CHE">Chemical Engineering</option>
                                         <option value="CIE">Civil Engineering</option>
-                                        <option value="EEE">Electrical and Electronics Engineering</option>
+                                        <option value="EEE">Electrical and Electronic Engineering</option>
                                         <option value="FST">Food Science and technology</option>
                                         <option value="MME">Material and Matallurgical Engineering</option>
                                         <option value="MEE">Mechanical Engineering</option>
