@@ -15,9 +15,31 @@ export default function TpsDashboard() {
     const [isFacultyDisabled, setIsFacultyDisabled] = useState(true);
     const [isDepartmentDisabled, setIsDepartmentDisabled] = useState(true);
     const [isNewApplication, setIsNewApplication] = useState(false);
-    const [institutionName, setInstitutionName] = useState('');
-    const [institutionAddress, setInstitutionAddress] = useState('');
-    const [institutionEmail, setInstitutionEmail] = useState('');
+    const [fullName, setFullName] = useState('');
+    const [infoIsCorrect, setInfoIsCorrect] = useState(false);
+
+    function handleSetInfoIsCorrect(e) {
+        if (infoIsCorrect == true) {
+            setInfoIsCorrect(false);
+        }
+        if (infoIsCorrect == false) {
+            setInfoIsCorrect(true);
+        }
+    }
+
+    function saveProgress() {
+
+    }
+
+    function tpsRequest() {
+        if (infoIsCorrect == false) {
+            alert("To Proceed, Please Confirm The Information You Provided");
+            return;
+        }
+        if (infoIsCorrect == true) {
+            alert("Your Request Has Been Saved!! Please Proceed to Make Payment");
+        }
+    }
 
     async function getStudentInfo(studentEmail) {
         const response = await fetch(`/api/student-info?email=${studentEmail}`, {
@@ -30,11 +52,24 @@ export default function TpsDashboard() {
         setFirstName(studentInfo.data.firstName);
         setMiddleName(studentInfo.data.middleName);
         setLastName(studentInfo.data.lastName);
+        setFullName(`${studentInfo.data.firstName} ${studentInfo.data.middleName} ${studentInfo.data.lastName}`);
         setStudentId(studentInfo.data.studentId);
         setEmail(studentInfo.data.email);
     }
 
     function applyNew() {
+        if (programSelectedValue == "") {
+            alert("Please Select a Program");
+            return;
+        }
+        if (facultySelectedValue == "") {
+            alert("Please Select Faculty");
+            return;
+        }
+        if (departmentSelectedValue == "") {
+            alert("Please Select Your Department");
+            return;
+        }
         setIsNewApplication(true);
     }
 
@@ -42,127 +77,127 @@ export default function TpsDashboard() {
         setIsNewApplication(false);
     }
 
-    function tpsRequest() {
-        var q = document.getElementById("studentId").value;
-        var r = document.getElementById("faculty").value;
-        r = encodeURIComponent(r);
-        var s = document.getElementById("department").value;
-        s = encodeURIComponent(s);
-        var t = document.getElementById("tpsOthers").value;
-        var u = document.getElementById("InstitutionName").value;
-        u = u.replace("'", "`");
-        u = encodeURIComponent(u);
-        var v = document.getElementById("InstitutionAddress").value;
-        v = v.replace("'", "`");
-        v = encodeURIComponent(v);
-        var x = document.getElementById("InstitutionEmail").value;
-        var y = document.getElementById("tpsformat").value;
-        var z = document.getElementById("txtCost").value;
-        var a = document.getElementById("country").value;
-        a = a.replace("'", "`");
-        a = encodeURIComponent(a);
-        var b = document.getElementById("requestID").value;
-        var c = document.getElementById("Email").value;
-        var d = document.getElementById("datepicker").value;
-        var e = document.getElementById("LastName").value + " " + document.getElementById("FirstName").value + " " + document.getElementById("MiddleName").value;
-        var f = document.getElementById("txtcategory").value;
-        var xmlhttp;
+    // function oldTpsRequest() {
+    //     var q = document.getElementById("studentId").value;
+    //     var r = document.getElementById("faculty").value;
+    //     r = encodeURIComponent(r);
+    //     var s = document.getElementById("department").value;
+    //     s = encodeURIComponent(s);
+    //     var t = document.getElementById("tpsOthers").value;
+    //     var u = document.getElementById("InstitutionName").value;
+    //     u = u.replace("'", "`");
+    //     u = encodeURIComponent(u);
+    //     var v = document.getElementById("InstitutionAddress").value;
+    //     v = v.replace("'", "`");
+    //     v = encodeURIComponent(v);
+    //     var x = document.getElementById("InstitutionEmail").value;
+    //     var y = document.getElementById("tpsformat").value;
+    //     var z = document.getElementById("txtCost").value;
+    //     var a = document.getElementById("country").value;
+    //     a = a.replace("'", "`");
+    //     a = encodeURIComponent(a);
+    //     var b = document.getElementById("requestID").value;
+    //     var c = document.getElementById("Email").value;
+    //     var d = document.getElementById("datepicker").value;
+    //     var e = document.getElementById("LastName").value + " " + document.getElementById("FirstName").value + " " + document.getElementById("MiddleName").value;
+    //     var f = document.getElementById("txtcategory").value;
+    //     var xmlhttp;
 
-        if (d == "") {
-            alert("Date of graduation is required to process your transcript.\n");
-            return;
-        }
-        if (q == "") {
-            alert("Your Registration Number is required to process your transcript.\n");
-            return;
-        }
-        if (r == "") {
-            alert("Your School/Facualty is required to process your transcript.\n");
-            return;
-        }
-        if (s == "") {
-            alert("Your Department is required to process your transcript.\n");
-            return;
-        }
-        if (t == "") {
-            alert("Program field is required to process your transcript.\n");
-            return;
-        }
-        if (u == "") {
-            alert("Destination Institution Name is required to process your transcript.\n");
-            return;
-        }
-        if (y == "") {
-            alert("Method of sending the transcript is required to process your transcript.\n");
-            return;
-        }
-        if (z == "") {
-            alert("Invalid Processing Fee was specified.\n");
-            return;
-        }
+    //     if (d == "") {
+    //         alert("Date of graduation is required to process your transcript.\n");
+    //         return;
+    //     }
+    //     if (q == "") {
+    //         alert("Your Registration Number is required to process your transcript.\n");
+    //         return;
+    //     }
+    //     if (r == "") {
+    //         alert("Your School/Facualty is required to process your transcript.\n");
+    //         return;
+    //     }
+    //     if (s == "") {
+    //         alert("Your Department is required to process your transcript.\n");
+    //         return;
+    //     }
+    //     if (t == "") {
+    //         alert("Program field is required to process your transcript.\n");
+    //         return;
+    //     }
+    //     if (u == "") {
+    //         alert("Destination Institution Name is required to process your transcript.\n");
+    //         return;
+    //     }
+    //     if (y == "") {
+    //         alert("Method of sending the transcript is required to process your transcript.\n");
+    //         return;
+    //     }
+    //     if (z == "") {
+    //         alert("Invalid Processing Fee was specified.\n");
+    //         return;
+    //     }
 
-        if (document.getElementById("tpsformat").value == "email") {
-            if (x == "") {
-                alert("Destination Institution Email Address is required to process your transcript.\n");
-                return;
-            }
-        } else if (document.getElementById("tpsformat").value == "post") {
-            if (v == "") {
-                alert("Destination Institution Postal Address is required to process your transcript.\n");
-                return;
-            }
-        } else if (document.getElementById("tpsformat").value == "both") {
-            if (x == "") {
-                alert("Destination Institution Email Address is required to process your transcript.\n");
-                return;
-            }
-            if (v == "") {
-                alert("Destination Institution Postal Address is required to process your transcript.\n");
-                return;
-            }
-        } else {
-            if (y == "") {
-                alert("Method of sending the transcript is required to process your transcript.\n");
-                return;
-            }
-        }
+    //     if (document.getElementById("tpsformat").value == "email") {
+    //         if (x == "") {
+    //             alert("Destination Institution Email Address is required to process your transcript.\n");
+    //             return;
+    //         }
+    //     } else if (document.getElementById("tpsformat").value == "post") {
+    //         if (v == "") {
+    //             alert("Destination Institution Postal Address is required to process your transcript.\n");
+    //             return;
+    //         }
+    //     } else if (document.getElementById("tpsformat").value == "both") {
+    //         if (x == "") {
+    //             alert("Destination Institution Email Address is required to process your transcript.\n");
+    //             return;
+    //         }
+    //         if (v == "") {
+    //             alert("Destination Institution Postal Address is required to process your transcript.\n");
+    //             return;
+    //         }
+    //     } else {
+    //         if (y == "") {
+    //             alert("Method of sending the transcript is required to process your transcript.\n");
+    //             return;
+    //         }
+    //     }
 
-        document.getElementById('progress_tbl').style.display = "block";
+    //     document.getElementById('progress_tbl').style.display = "block";
 
-        if (window.XMLHttpRequest) {
-            xmlhttp = new XMLHttpRequest();
-        }
-        else {
-            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-        }
-        xmlhttp.onreadystatechange = function () {
-            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                document.getElementById('progress_tbl').style.display = "none";
+    //     if (window.XMLHttpRequest) {
+    //         xmlhttp = new XMLHttpRequest();
+    //     }
+    //     else {
+    //         xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+    //     }
+    //     xmlhttp.onreadystatechange = function () {
+    //         if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+    //             document.getElementById('progress_tbl').style.display = "none";
 
-                var nstr = xmlhttp.responseText;
-                var ns = nstr.split("``");
-                var nt = "";
-                //	document.getElementById("tpub").value=ns[1];
-                nt = ns[0];
-                alert(nt);
-                //  return;
-                //ns[1] = decodeURIComponent(ns[1]);
-                document.getElementById("previousRQST").innerHTML = ns[1];
-            }
-        }
-        xmlhttp.open("POST", "tpsrequest.php?q=" + q + "&r=" + r + "&s=" + s + "&t=" + t + "&u=" + u + "&v=" + v + "&x=" + x + "&y=" + y + "&z=" + z + "&a=" + a + "&b=" + b + "&c=" + c + "&d=" + d + "&e=" + e + "&f=" + f, true);
-        xmlhttp.send();
+    //             var nstr = xmlhttp.responseText;
+    //             var ns = nstr.split("``");
+    //             var nt = "";
+    //             //	document.getElementById("tpub").value=ns[1];
+    //             nt = ns[0];
+    //             alert(nt);
+    //             //  return;
+    //             //ns[1] = decodeURIComponent(ns[1]);
+    //             document.getElementById("previousRQST").innerHTML = ns[1];
+    //         }
+    //     }
+    //     xmlhttp.open("POST", "tpsrequest.php?q=" + q + "&r=" + r + "&s=" + s + "&t=" + t + "&u=" + u + "&v=" + v + "&x=" + x + "&y=" + y + "&z=" + z + "&a=" + a + "&b=" + b + "&c=" + c + "&d=" + d + "&e=" + e + "&f=" + f, true);
+    //     xmlhttp.send();
 
-        document.getElementById("cmdNew_handle").style.display = "block";
-        document.getElementById("newApp").style.display = "none";
-        document.getElementById("newApp_tbl").style.display = "none";
-        document.getElementById("appHeader").innerHTML = "";
+    //     document.getElementById("cmdNew_handle").style.display = "block";
+    //     document.getElementById("newApp").style.display = "none";
+    //     document.getElementById("newApp_tbl").style.display = "none";
+    //     document.getElementById("appHeader").innerHTML = "";
 
-        document.getElementById("InstitutionAddress").style.display = "none";
-        document.getElementById("InstitutionAddress_lbl").style.display = "none";
-        document.getElementById("InstitutionEmail").style.display = "none";
-        document.getElementById("InstitutionEmail_lbl").style.display = "none";
-    }
+    //     document.getElementById("InstitutionAddress").style.display = "none";
+    //     document.getElementById("InstitutionAddress_lbl").style.display = "none";
+    //     document.getElementById("InstitutionEmail").style.display = "none";
+    //     document.getElementById("InstitutionEmail_lbl").style.display = "none";
+    // }
 
     useEffect(() => {
         // Retrieve the stored email from session storage
@@ -404,15 +439,16 @@ export default function TpsDashboard() {
 
                                                                 <div id="tps_info"
                                                                     style={{ minHeight: "25px", height: "auto", width: "960px", textAlign: "center", marginLeft: "20px", color: "#F00" }}>
-                                                                    <p style={{ textAlign: "center", marginLeft: "0px", color: "#F00" }}>Please
-                                                                        note that upon successful payment, destination information
-                                                                        ceases to be editable. A payment once completed, cannot be
-                                                                        reversed. </p>
-                                                                    <p style={{ textAlign: "center", marginLeft: "0px", color: "#F00" }}>To
-                                                                        confirm
-                                                                        your payment and print or re-print your receipt, click the
-                                                                        <span style={{ fontStyle: "italic" }}>Payment Status</span> button
-                                                                        above. </p>
+                                                                    <p style={{ textAlign: "center", marginLeft: "0px", color: "#F00" }}>
+                                                                        Please tick the <span style={{ fontStyle: "italic" }}>Checkbox</span> below to confirm that the information you provided is correct.
+                                                                    </p>
+                                                                    <p style={{ textAlign: "center", marginLeft: "0px", color: "#F00" }}>
+                                                                        After that click the <span style={{ fontStyle: "italic" }}>Save and Continue</span> button below to proceed with your request.
+                                                                        You will be prompted to make payment.
+                                                                    </p>
+                                                                    <p style={{ textAlign: "center", marginLeft: "0px", color: "#F00" }}>
+                                                                        Upon successful payment the option to <span style={{ fontStyle: "italic" }}>Preview or Download</span> the transcript as a PDF will be made available.
+                                                                    </p>
                                                                 </div>
                                                                 {isNewApplication && (
                                                                     <>
@@ -423,30 +459,50 @@ export default function TpsDashboard() {
                                                                                 <tbody>
                                                                                     <tr>
                                                                                         <td style={{ width: "160px" }}>
-                                                                                            <label htmlFor="institutionName" title="Your Destination Institution's Name">INSTITUTION NAME:</label>
+                                                                                            <label htmlFor="fullName" title="Your Full Name">FULL NAME:</label>
                                                                                         </td>
                                                                                         <td>
-                                                                                            <input id="institutionName" name="institutionName" placeholder="Destination Institution" type="text" value={institutionName} onChange={(e) => setInstitutionName(e.target.value)} style={{ width: "600px" }} required />
-                                                                                        </td>
-                                                                                    </tr>
-                                                                                    <tr>
-                                                                                        <td>
-                                                                                            <label style={{}} id="institutionAddress_lbl" htmlFor="institutionAddress" title="Your Destination Institution's Postal Address">INSTITUTION ADDRESS:</label>
-                                                                                        </td>
-                                                                                        <td>
-                                                                                            <input id="institutionAddress" name="institutionAddress" placeholder="Destination Institution's Postal Address" type="text" value={institutionAddress} onChange={(e) => setInstitutionAddress(e.target.value)} style={{ width: "600px" }} required />
+                                                                                            <input readOnly id="fullName" name="fullName" placeholder="Your Full Name" type="text" value={fullName} style={{ width: "600px" }} required />
                                                                                         </td>
                                                                                     </tr>
                                                                                     <tr>
                                                                                         <td>
-                                                                                            <label style={{}} id="institutionEmail_lbl" htmlFor="institutionEmail" title="Your Destination Institution's Valid Email">INSTITUTION EMAIL:</label>
+                                                                                            <label style={{}} id="studentId_lbl" htmlFor="studentId" title="Matriculation Number">MATRICULATION NUMBER:</label>
                                                                                         </td>
                                                                                         <td>
-                                                                                            <input id="institutionEmail" name="institutionEmail" placeholder="Destination Institution's Valid Email" type="text" value={institutionEmail} onChange={(e) => setInstitutionEmail(e.target.value)} style={{ width: "300px" }} required />
+                                                                                            <input readOnly id="studentId" name="studentId" placeholder="Matriculation Number" type="text" value={studentId} style={{ width: "600px" }} required />
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td>
+                                                                                            <label style={{}} id="program_lbl" htmlFor="program" title="Selected Program">PROGRAM:</label>
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            <input readOnly id="program" name="program" placeholder="Selected Program" type="text" value={programSelectedValue} style={{ width: "300px" }} required />
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td>
+                                                                                            <label style={{}} id="faculty_lbl" htmlFor="faculty" title="Faculty">FACULTY:</label>
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            <input readOnly id="faculty" name="faculty" placeholder="Faculty" type="text" value={facultySelectedValue} style={{ width: "300px" }} required />
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td>
+                                                                                            <label style={{}} id="department_lbl" htmlFor="department" title="Department">DEPARTMENT:</label>
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            <input readOnly id="department" name="department" placeholder="Department" type="text" value={departmentSelectedValue} style={{ width: "300px" }} required />
                                                                                         </td>
                                                                                     </tr>
                                                                                 </tbody>
                                                                             </table>
+                                                                            <label>
+                                                                                <input type="checkbox" id="confirmCheckbox" value={infoIsCorrect} onChange={(e) => handleSetInfoIsCorrect(e)} required />
+                                                                                I confirm that the information provided above is correct.
+                                                                            </label>
                                                                         </fieldset>
 
                                                                         <div id="newApp_tbl" style={{}}>
@@ -460,7 +516,7 @@ export default function TpsDashboard() {
                                                                                         <td></td>
                                                                                         <td style={{ textAlign: "right" }}>
                                                                                             <button type="button" id="cmdCancel" name="cmdCancel" value="Cancel" onClick={closeApplyNew} className="">Close</button>
-                                                                                            <button type="button" id="cmdSubmit" name="cmdSubmit" value="Save and Continue" onClick="tpsRequest()" className="">Save and Continue</button>
+                                                                                            <button type="button" id="cmdSubmit" name="cmdSubmit" value="Save and Continue" onClick={tpsRequest} className="">Save and Continue</button>
                                                                                         </td>
                                                                                     </tr>
                                                                                 </tbody>
@@ -491,8 +547,7 @@ export default function TpsDashboard() {
                                                                 </div>
                                                                 <br />
 
-                                                                <fieldset id="previousApp"
-                                                                    style={{ height: "310px", width: "960px", marginLeft: "20px", overflow: "auto" }}>
+                                                                <fieldset id="previousApp" style={{ height: "310px", width: "960px", marginLeft: "20px", overflow: "auto" }}>
                                                                     <legend>PREVIOUS APPLICATIONS</legend>
                                                                     <div style={{ display: "none" }}>
                                                                         <input readOnly id="txtcategory" name="txtcategory" type="text" value="transcript" />
@@ -502,24 +557,28 @@ export default function TpsDashboard() {
                                                                         <table width='104%' style={{ borderWidth: "1px" }}>
                                                                             <tbody>
                                                                                 <tr>
-                                                                                    <td width='10%'
-                                                                                        style={{ borderWidth: "1px", fontWeight: "bold", textAlign: "center" }}>
-                                                                                        REQUEST ID</td>
-                                                                                    <td width='40%'
-                                                                                        style={{ borderWidth: "1px", fontWeight: "bold" }}>
-                                                                                        RECEIVING
-                                                                                        INSTITUTION</td>
-                                                                                    <td width='7%'
-                                                                                        style={{ borderWidth: "1px", fontWeight: "bold", textAlign: "center" }}>
-                                                                                        SEND BY</td>
-                                                                                    <td width='7%'
-                                                                                        style={{ borderWidth: "1px", fontWeight: "bold", textAlign: "center" }}>
-                                                                                        COST</td>
-                                                                                    <td width='7%'
-                                                                                        style={{ borderWidth: "1px", fontWeight: "bold", textAlign: "center" }}>
-                                                                                        STATUS</td>
-                                                                                    <td width='auto'
-                                                                                        style={{ borderWidth: "1px", fontWeight: "bold", textAlign: "center" }}>
+                                                                                    <td width='10%' style={{ borderWidth: "1px", fontWeight: "bold", textAlign: "center" }}>
+                                                                                        REQUEST ID
+                                                                                    </td>
+                                                                                    <td width='10%' style={{ borderWidth: "1px", fontWeight: "bold", textAlign: "center" }}>
+                                                                                        REG. NO
+                                                                                    </td>
+                                                                                    <td width='10%' style={{ borderWidth: "1px", fontWeight: "bold", textAlign: "center" }}>
+                                                                                        PROGRAM
+                                                                                    </td>
+                                                                                    <td width='7%' style={{ borderWidth: "1px", fontWeight: "bold", textAlign: "center" }}>
+                                                                                        FACULTY
+                                                                                    </td>
+                                                                                    <td width='7%' style={{ borderWidth: "1px", fontWeight: "bold", textAlign: "center" }}>
+                                                                                        DEPARTMENT
+                                                                                    </td>
+                                                                                    <td width='7%' style={{ borderWidth: "1px", fontWeight: "bold", textAlign: "center" }}>
+                                                                                        COST
+                                                                                    </td>
+                                                                                    <td width='7%' style={{ borderWidth: "1px", fontWeight: "bold", textAlign: "center" }}>
+                                                                                        STATUS
+                                                                                    </td>
+                                                                                    <td width='auto' style={{ borderWidth: "1px", fontWeight: "bold", textAlign: "center" }}>
                                                                                     </td>
                                                                                 </tr>
                                                                                 <tr>
@@ -527,6 +586,32 @@ export default function TpsDashboard() {
                                                                                     <td>&nbsp;</td>
                                                                                     <td>&nbsp;</td>
                                                                                     <td style={{ borderWidth: "1px" }}>&nbsp;</td>
+                                                                                </tr>
+                                                                                <tr>
+                                                                                    <td width='10%' style={{ borderWidth: "1px", textAlign: "center" }}>
+                                                                                        {"requestId"}
+                                                                                    </td>
+                                                                                    <td width='10%' style={{ borderWidth: "1px", textAlign: "center" }}>
+                                                                                        {"studentId"}
+                                                                                    </td>
+                                                                                    <td width='10%' style={{ borderWidth: "1px", textAlign: "center" }}>
+                                                                                        {"program"}
+                                                                                    </td>
+                                                                                    <td width='7%' style={{ borderWidth: "1px", textAlign: "center" }}>
+                                                                                        {"faculty"}
+                                                                                    </td>
+                                                                                    <td width='7%' style={{ borderWidth: "1px", textAlign: "center" }}>
+                                                                                        {"department"}
+                                                                                    </td>
+                                                                                    <td width='7%' style={{ borderWidth: "1px", textAlign: "center" }}>
+                                                                                        {"cost"}
+                                                                                    </td>
+                                                                                    <td width='7%' style={{ borderWidth: "1px", textAlign: "center" }}>
+                                                                                        {"paymentStatus"}
+                                                                                    </td>
+                                                                                    <td width='auto%' style={{ borderWidth: "1px", textAlign: "center" }}>
+                                                                                        {"buttons"}
+                                                                                    </td>
                                                                                 </tr>
                                                                             </tbody>
                                                                         </table>

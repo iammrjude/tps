@@ -51,6 +51,18 @@ const studentSchema = new mongoose.Schema({
     faculty: { type: String, required: true },
     department: { type: String, required: true },
     option: { type: String, required: false },
+    tpsApplicationData: {
+        type: {
+            requestId: { type: String, required: false },
+            studentId: { type: String, required: false },
+            program: { type: String, required: false },
+            faculty: { type: String, required: false },
+            department: { type: String, required: false },
+            cost: { type: String, required: false },
+            paymentStatus: { type: String, required: false },
+        },
+        required: false,
+    },
 });
 
 // Create the Student model using the schema
