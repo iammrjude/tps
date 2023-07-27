@@ -17,6 +17,12 @@ export default function TpsDashboard() {
     const [isNewApplication, setIsNewApplication] = useState(false);
     const [fullName, setFullName] = useState('');
     const [infoIsCorrect, setInfoIsCorrect] = useState(false);
+    const [requestId, setRequestId] = useState(540001);
+    const [program, setProgram] = useState('');
+    const [faculty, setFaculty] = useState('');
+    const [department, setDepartment] = useState('');
+    const [cost, setCost] = useState(17500);
+    const [paymentStatus, setPaymentStatus] = useState('unpaid');
 
     function handleSetInfoIsCorrect(e) {
         if (infoIsCorrect == true) {
@@ -27,16 +33,46 @@ export default function TpsDashboard() {
         }
     }
 
-    function saveProgress() {
-
+    async function saveProgress() {
+        try {
+            const data = { requestId, studentId, program: programSelectedValue, faculty: facultySelectedValue, department: departmentSelectedValue, cost, paymentStatus };
+            const response = await fetch(`/api/save-progress`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            const jsonResponse = await response.json();
+        } catch (error) {
+            console.error('Error while trying to save progress:', error);
+        }
     }
 
-    function tpsRequest() {
+    async function retrieveProgress(studentId) {
+        try {
+            const response = await fetch(`/api/retrieve-progress?studentId=${studentId}`, {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' },
+            });
+            const jsonResponse = await response.json();
+            const progress = jsonResponse.data;
+            setRequestId(progress.requestId);
+            setProgram(progress.program);
+            setFaculty(progress.faculty);
+            setDepartment(progress.department);
+            setCost(progress.cost);
+            setPaymentStatus(progress.paymentStatus);
+        } catch (error) {
+            console.error('Error while trying to retrieve progress:', error);
+        }
+    }
+
+    async function tpsRequest() {
         if (infoIsCorrect == false) {
             alert("To Proceed, Please Confirm The Information You Provided");
             return;
         }
         if (infoIsCorrect == true) {
+            await saveProgress();
             alert("Your Request Has Been Saved!! Please Proceed to Make Payment");
         }
     }
@@ -81,12 +117,18 @@ export default function TpsDashboard() {
         // Retrieve the stored email from session storage
         const studentEmail = sessionStorage.getItem('studentEmail');
         if (studentEmail) {
-            getStudentInfo(studentEmail)
+            getStudentInfo(studentEmail);
         } else {
             // Redirect to login-student page
             router.push('/login-student');
         }
     }, []);
+
+    useEffect(() => {
+        if (studentId != '') {
+            retrieveProgress(studentId);
+        }
+    }, [studentId]);
 
     useEffect(() => {
         if (programSelectedValue === "B.Eng.") {
@@ -459,33 +501,33 @@ export default function TpsDashboard() {
                                                                                     <td width='auto' style={{ borderWidth: "1px", fontWeight: "bold", textAlign: "center" }}>
                                                                                     </td>
                                                                                 </tr>
-                                                                                <tr>
+                                                                                {/* <tr>
                                                                                     <td>&nbsp;</td>
                                                                                     <td>&nbsp;</td>
                                                                                     <td>&nbsp;</td>
                                                                                     <td style={{ borderWidth: "1px" }}>&nbsp;</td>
-                                                                                </tr>
+                                                                                </tr> */}
                                                                                 <tr>
                                                                                     <td width='10%' style={{ borderWidth: "1px", textAlign: "center" }}>
-                                                                                        {"requestId"}
+                                                                                        {requestId}
                                                                                     </td>
                                                                                     <td width='10%' style={{ borderWidth: "1px", textAlign: "center" }}>
-                                                                                        {"studentId"}
+                                                                                        {studentId}
                                                                                     </td>
                                                                                     <td width='10%' style={{ borderWidth: "1px", textAlign: "center" }}>
-                                                                                        {"program"}
+                                                                                        {program}
                                                                                     </td>
                                                                                     <td width='7%' style={{ borderWidth: "1px", textAlign: "center" }}>
-                                                                                        {"faculty"}
+                                                                                        {faculty}
                                                                                     </td>
                                                                                     <td width='7%' style={{ borderWidth: "1px", textAlign: "center" }}>
-                                                                                        {"department"}
+                                                                                        {department}
                                                                                     </td>
                                                                                     <td width='7%' style={{ borderWidth: "1px", textAlign: "center" }}>
-                                                                                        {"cost"}
+                                                                                        {cost}
                                                                                     </td>
                                                                                     <td width='7%' style={{ borderWidth: "1px", textAlign: "center" }}>
-                                                                                        {"paymentStatus"}
+                                                                                        {paymentStatus}
                                                                                     </td>
                                                                                     <td width='auto%' style={{ borderWidth: "1px", textAlign: "center" }}>
                                                                                         {"buttons"}
