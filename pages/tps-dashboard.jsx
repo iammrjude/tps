@@ -14,6 +14,10 @@ export default function TpsDashboard() {
     const [departmentSelectedValue, setDepartmentSelectedValue] = useState('');
     const [isFacultyDisabled, setIsFacultyDisabled] = useState(true);
     const [isDepartmentDisabled, setIsDepartmentDisabled] = useState(true);
+    const [isNewApplication, setIsNewApplication] = useState(false);
+    const [institutionName, setInstitutionName] = useState('');
+    const [institutionAddress, setInstitutionAddress] = useState('');
+    const [institutionEmail, setInstitutionEmail] = useState('');
 
     async function getStudentInfo(studentEmail) {
         const response = await fetch(`/api/student-info?email=${studentEmail}`, {
@@ -28,6 +32,136 @@ export default function TpsDashboard() {
         setLastName(studentInfo.data.lastName);
         setStudentId(studentInfo.data.studentId);
         setEmail(studentInfo.data.email);
+    }
+
+    function applyNew() {
+        setIsNewApplication(true);
+    }
+
+    function closeApplyNew() {
+        setIsNewApplication(false);
+    }
+
+    function tpsRequest() {
+        var q = document.getElementById("studentId").value;
+        var r = document.getElementById("faculty").value;
+        r = encodeURIComponent(r);
+        var s = document.getElementById("department").value;
+        s = encodeURIComponent(s);
+        var t = document.getElementById("tpsOthers").value;
+        var u = document.getElementById("InstitutionName").value;
+        u = u.replace("'", "`");
+        u = encodeURIComponent(u);
+        var v = document.getElementById("InstitutionAddress").value;
+        v = v.replace("'", "`");
+        v = encodeURIComponent(v);
+        var x = document.getElementById("InstitutionEmail").value;
+        var y = document.getElementById("tpsformat").value;
+        var z = document.getElementById("txtCost").value;
+        var a = document.getElementById("country").value;
+        a = a.replace("'", "`");
+        a = encodeURIComponent(a);
+        var b = document.getElementById("requestID").value;
+        var c = document.getElementById("Email").value;
+        var d = document.getElementById("datepicker").value;
+        var e = document.getElementById("LastName").value + " " + document.getElementById("FirstName").value + " " + document.getElementById("MiddleName").value;
+        var f = document.getElementById("txtcategory").value;
+        var xmlhttp;
+
+        if (d == "") {
+            alert("Date of graduation is required to process your transcript.\n");
+            return;
+        }
+        if (q == "") {
+            alert("Your Registration Number is required to process your transcript.\n");
+            return;
+        }
+        if (r == "") {
+            alert("Your School/Facualty is required to process your transcript.\n");
+            return;
+        }
+        if (s == "") {
+            alert("Your Department is required to process your transcript.\n");
+            return;
+        }
+        if (t == "") {
+            alert("Program field is required to process your transcript.\n");
+            return;
+        }
+        if (u == "") {
+            alert("Destination Institution Name is required to process your transcript.\n");
+            return;
+        }
+        if (y == "") {
+            alert("Method of sending the transcript is required to process your transcript.\n");
+            return;
+        }
+        if (z == "") {
+            alert("Invalid Processing Fee was specified.\n");
+            return;
+        }
+
+        if (document.getElementById("tpsformat").value == "email") {
+            if (x == "") {
+                alert("Destination Institution Email Address is required to process your transcript.\n");
+                return;
+            }
+        } else if (document.getElementById("tpsformat").value == "post") {
+            if (v == "") {
+                alert("Destination Institution Postal Address is required to process your transcript.\n");
+                return;
+            }
+        } else if (document.getElementById("tpsformat").value == "both") {
+            if (x == "") {
+                alert("Destination Institution Email Address is required to process your transcript.\n");
+                return;
+            }
+            if (v == "") {
+                alert("Destination Institution Postal Address is required to process your transcript.\n");
+                return;
+            }
+        } else {
+            if (y == "") {
+                alert("Method of sending the transcript is required to process your transcript.\n");
+                return;
+            }
+        }
+
+        document.getElementById('progress_tbl').style.display = "block";
+
+        if (window.XMLHttpRequest) {
+            xmlhttp = new XMLHttpRequest();
+        }
+        else {
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.onreadystatechange = function () {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                document.getElementById('progress_tbl').style.display = "none";
+
+                var nstr = xmlhttp.responseText;
+                var ns = nstr.split("``");
+                var nt = "";
+                //	document.getElementById("tpub").value=ns[1];
+                nt = ns[0];
+                alert(nt);
+                //  return;
+                //ns[1] = decodeURIComponent(ns[1]);
+                document.getElementById("previousRQST").innerHTML = ns[1];
+            }
+        }
+        xmlhttp.open("POST", "tpsrequest.php?q=" + q + "&r=" + r + "&s=" + s + "&t=" + t + "&u=" + u + "&v=" + v + "&x=" + x + "&y=" + y + "&z=" + z + "&a=" + a + "&b=" + b + "&c=" + c + "&d=" + d + "&e=" + e + "&f=" + f, true);
+        xmlhttp.send();
+
+        document.getElementById("cmdNew_handle").style.display = "block";
+        document.getElementById("newApp").style.display = "none";
+        document.getElementById("newApp_tbl").style.display = "none";
+        document.getElementById("appHeader").innerHTML = "";
+
+        document.getElementById("InstitutionAddress").style.display = "none";
+        document.getElementById("InstitutionAddress_lbl").style.display = "none";
+        document.getElementById("InstitutionEmail").style.display = "none";
+        document.getElementById("InstitutionEmail_lbl").style.display = "none";
     }
 
     useEffect(() => {
@@ -133,6 +267,21 @@ export default function TpsDashboard() {
                                                                 <div style={{ float: "left", marginLeft: "20px" }}>
                                                                     FUTO Transcript Processing and Result Verification System
                                                                 </div>
+                                                                <div id="cmdOut_handle" style={{ float: "right", marginRight: "20px" }}>
+                                                                    {/* onClick={handleLogout} */}
+                                                                    <button type="submit" id="cmdOut" name="cmdOut" value="Logout" style={{ border: "none", backgroundColor: "inherit", color: "#EC6674", cursor: "pointer" }} className="">Logout</button>
+                                                                </div>
+                                                                <div id="cmdProfile_handle" style={{ float: "right", marginRight: "5px" }}>
+                                                                    <button type="submit" id="cmdPaymentStatus" name="cmdPaymentStatus" value="Payment Status" style={{ cursor: "pointer" }}>Payment Status</button>
+                                                                </div>
+                                                                <div id="cmdProfile_handle" style={{ float: "right", marginRight: "5px" }}>
+                                                                    <button type="submit" id="cmdProfile" name="cmdProfile" value="My Profile" style={{ cursor: "pointer" }}>My Profile</button>
+                                                                </div>
+                                                                {!isNewApplication && (
+                                                                    <div id="cmdNew_handle" style={{ float: "right", marginRight: "5px" }}>
+                                                                        <button type="button" id="cmdNew" name="cmdNew" value="New" onClick={applyNew} style={{}} className="">Apply New</button>
+                                                                    </div>
+                                                                )}
                                                             </div>
 
                                                             <div>
@@ -164,10 +313,10 @@ export default function TpsDashboard() {
 
                                                                         <tr style={{ height: "40px" }}>
                                                                             <td>
-                                                                                <label htmlFor='RegNumber' title='Your Registration Number'>REG. NUMBER:</label>
+                                                                                <label htmlFor='studentId' title='Your Registration Number'>REG. NUMBER:</label>
                                                                             </td>
                                                                             <td>
-                                                                                <input readOnly autoComplete='off' id='RegNumber' name='RegNumber' type='text' value={studentId} style={{ width: "200px", resize: 'none', }} />
+                                                                                <input readOnly autoComplete='off' id='studentId' name='studentId' type='text' value={studentId} style={{ width: "200px", resize: 'none', }} />
                                                                             </td>
                                                                             <td style={{ width: "100px", textAlign: "right" }}>
                                                                                 <label htmlFor="Email" title="Your Valid E-Mail Address as Verification will be required.">EMAIL ADDRESS:</label>
@@ -196,10 +345,10 @@ export default function TpsDashboard() {
 
                                                                         <tr style={{ height: "40px" }}>
                                                                             <td>
-                                                                                <label htmlFor="school" title="Your School/Faculty">SCHOOL:</label>
+                                                                                <label htmlFor="faculty" title="Your School/Faculty">FACULTY:</label>
                                                                             </td>
                                                                             <td>
-                                                                                <select data-val="true" data-val-required="*" id="school" name="school" value={facultySelectedValue} onChange={(e) => setFacultySelectedValue(e.target.value)} style={{ width: "200px" }} disabled={isFacultyDisabled}>
+                                                                                <select data-val="true" data-val-required="*" id="faculty" name="faculty" value={facultySelectedValue} onChange={(e) => setFacultySelectedValue(e.target.value)} style={{ width: "200px" }} disabled={isFacultyDisabled}>
                                                                                     <option value=""></option>
                                                                                     <option value="SAAT">School of Agriculture And Agricultural Technology (SAAT)</option>
                                                                                     <option value="SBMS">School of Basic Medical Science (SBMS)</option>
@@ -247,14 +396,11 @@ export default function TpsDashboard() {
                                                                             </td>
                                                                         </tr>
 
-                                                                        <tr style={{ height: "10px" }}>
+                                                                        <tr style={{ height: "40px" }}>
                                                                         </tr>
                                                                     </tbody>
                                                                 </table>
-                                                                <button style={{ float: "left", marginLeft: "20px" }}>Request Transcript</button>
                                                                 <br />
-                                                                <br />
-                                                                <div style={{ marginBottom: "20px" }}></div>
 
                                                                 <div id="tps_info"
                                                                     style={{ minHeight: "25px", height: "auto", width: "960px", textAlign: "center", marginLeft: "20px", color: "#F00" }}>
@@ -268,6 +414,61 @@ export default function TpsDashboard() {
                                                                         <span style={{ fontStyle: "italic" }}>Payment Status</span> button
                                                                         above. </p>
                                                                 </div>
+                                                                {isNewApplication && (
+                                                                    <>
+                                                                        <fieldset id="newApp" style={{ height: "auto", width: "960px", marginLeft: "20px" }}>
+                                                                            <legend id="appHeader">NEW APPLICATION</legend>
+
+                                                                            <table style={{ width: "inherit", textAlign: "justify", marginLeft: "5px", marginTop: "10px" }}>
+                                                                                <tbody>
+                                                                                    <tr>
+                                                                                        <td style={{ width: "160px" }}>
+                                                                                            <label htmlFor="institutionName" title="Your Destination Institution's Name">INSTITUTION NAME:</label>
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            <input id="institutionName" name="institutionName" placeholder="Destination Institution" type="text" value={institutionName} onChange={(e) => setInstitutionName(e.target.value)} style={{ width: "600px" }} required />
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td>
+                                                                                            <label style={{}} id="institutionAddress_lbl" htmlFor="institutionAddress" title="Your Destination Institution's Postal Address">INSTITUTION ADDRESS:</label>
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            <input id="institutionAddress" name="institutionAddress" placeholder="Destination Institution's Postal Address" type="text" value={institutionAddress} onChange={(e) => setInstitutionAddress(e.target.value)} style={{ width: "600px" }} required />
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td>
+                                                                                            <label style={{}} id="institutionEmail_lbl" htmlFor="institutionEmail" title="Your Destination Institution's Valid Email">INSTITUTION EMAIL:</label>
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            <input id="institutionEmail" name="institutionEmail" placeholder="Destination Institution's Valid Email" type="text" value={institutionEmail} onChange={(e) => setInstitutionEmail(e.target.value)} style={{ width: "300px" }} required />
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                </tbody>
+                                                                            </table>
+                                                                        </fieldset>
+
+                                                                        <div id="newApp_tbl" style={{}}>
+                                                                            <table style={{ width: "980px", textAlign: "justify", marginLeft: "20px", marginTop: "0px" }}>
+                                                                                <tbody>
+                                                                                    <tr>
+                                                                                        <td></td>
+                                                                                        <td></td>
+                                                                                        <td></td>
+                                                                                        <td></td>
+                                                                                        <td></td>
+                                                                                        <td style={{ textAlign: "right" }}>
+                                                                                            <button type="button" id="cmdCancel" name="cmdCancel" value="Cancel" onClick={closeApplyNew} className="">Close</button>
+                                                                                            <button type="button" id="cmdSubmit" name="cmdSubmit" value="Save and Continue" onClick="tpsRequest()" className="">Save and Continue</button>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                </tbody>
+                                                                            </table>
+                                                                        </div><br />
+                                                                    </>
+                                                                )}
+
                                                                 <br />
 
                                                                 <div id="progress_tbl" style={{ display: "none" }}>
