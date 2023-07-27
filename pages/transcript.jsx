@@ -79,9 +79,16 @@ export default function Transcript() {
     }
 
     useEffect(() => {
-        getStudentInfo('jachimmabedeugwu@gmail.com');
-        getStudentRecord('SEET', 'EEE', '20171040323');
-    }, []);
+        // Retrieve the stored email from session storage
+        const studentEmail = sessionStorage.getItem('studentEmail');
+        if (studentEmail) {
+            getStudentInfo(studentEmail);
+            getStudentRecord(faculty, department, studentId);
+        } else {
+            // Redirect to login-student page
+            router.push('/login-student');
+        }
+    }, [faculty, department, studentId]);
 
     useEffect(() => {
         sessionsArray.forEach((session, index) => {

@@ -17,12 +17,12 @@ export default function TpsDashboard() {
     const [isNewApplication, setIsNewApplication] = useState(false);
     const [fullName, setFullName] = useState('');
     const [infoIsCorrect, setInfoIsCorrect] = useState(false);
-    const [requestId, setRequestId] = useState(540001);
+    const [requestId, setRequestId] = useState('');
     const [program, setProgram] = useState('');
     const [faculty, setFaculty] = useState('');
     const [department, setDepartment] = useState('');
-    const [cost, setCost] = useState(17500);
-    const [paymentStatus, setPaymentStatus] = useState('unpaid');
+    const [cost, setCost] = useState('');
+    const [paymentStatus, setPaymentStatus] = useState('');
 
     function handleSetInfoIsCorrect(e) {
         if (infoIsCorrect == true) {
@@ -33,9 +33,16 @@ export default function TpsDashboard() {
         }
     }
 
-    async function saveProgress() {
+    function handlePreview() {
+        // Redirect to transcript preview page
+        router.push('/transcript');
+    }
+
+    async function updatePaymentStatus(studentId) { }
+
+    async function saveProgress(studentId) {
         try {
-            const data = { requestId, studentId, program: programSelectedValue, faculty: facultySelectedValue, department: departmentSelectedValue, cost, paymentStatus };
+            const data = { studentId: studentId, program: programSelectedValue, faculty: facultySelectedValue, department: departmentSelectedValue, cost: '17500', paymentStatus: 'paid' };
             const response = await fetch(`/api/save-progress`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -72,7 +79,7 @@ export default function TpsDashboard() {
             return;
         }
         if (infoIsCorrect == true) {
-            await saveProgress();
+            await saveProgress(studentId);
             alert("Your Request Has Been Saved!! Please Proceed to Make Payment");
         }
     }
@@ -501,12 +508,6 @@ export default function TpsDashboard() {
                                                                                     <td width='auto' style={{ borderWidth: "1px", fontWeight: "bold", textAlign: "center" }}>
                                                                                     </td>
                                                                                 </tr>
-                                                                                {/* <tr>
-                                                                                    <td>&nbsp;</td>
-                                                                                    <td>&nbsp;</td>
-                                                                                    <td>&nbsp;</td>
-                                                                                    <td style={{ borderWidth: "1px" }}>&nbsp;</td>
-                                                                                </tr> */}
                                                                                 <tr>
                                                                                     <td width='10%' style={{ borderWidth: "1px", textAlign: "center" }}>
                                                                                         {requestId}
@@ -530,7 +531,18 @@ export default function TpsDashboard() {
                                                                                         {paymentStatus}
                                                                                     </td>
                                                                                     <td width='auto%' style={{ borderWidth: "1px", textAlign: "center" }}>
-                                                                                        {"buttons"}
+                                                                                        {paymentStatus == "unpaid" ? (
+                                                                                            <>
+                                                                                                <button type="button" id="edit" name="edit" value="Edit" className="">Edit</button>
+                                                                                                <button type="button" id="makePayment" name="makePayment" value="Proceed To Make Payment" className="">Proceed To Make Payment</button>
+                                                                                            </>
+                                                                                        ) : (
+                                                                                            <>
+                                                                                                <button type="button" id="preview" name="preview" value="Preview" onClick={handlePreview} className="">Preview</button>
+                                                                                                <button type="button" id="download" name="download" value="Download PDF" className="">Download PDF</button>
+                                                                                            </>
+                                                                                        )
+                                                                                        }
                                                                                     </td>
                                                                                 </tr>
                                                                             </tbody>

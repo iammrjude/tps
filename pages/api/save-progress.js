@@ -21,8 +21,8 @@ export default async function handler(req, res) {
         return res.status(405).json({ success: false, message: 'Method not allowed' });
     }
 
-    const { requestId, studentId, program, faculty, department, cost, paymentStatus } = req.body;
-    const tpsApplicationData = { requestId, studentId, program, faculty, department, cost, paymentStatus };
+    const { studentId, program, faculty, department, cost, paymentStatus } = req.body;
+    const tpsApplicationData = { studentId, program, faculty, department, cost, paymentStatus };
 
     try {
         // Update the student by studentId
@@ -35,7 +35,18 @@ export default async function handler(req, res) {
             return res.status(404).json({ success: false, message: 'Student not found' });
         }
 
-        res.status(200).json({ success: true, message: 'TPS progress saved successfully' });
+        const generatedObjectId = updatedStudent.tpsApplicationData._id;
+        const decimalNumber = BigInt(`0x${generatedObjectId}`);
+        const firstFiveDigits = String(decimalNumber).slice(0, 5);
+        const requestId = firstFiveDigits;
+        tpsApplicationData.requestId = requestId;
+        const updatedStudentWithRequestId = await Student.findOneAndUpdate(
+            { studentId },
+            { $set: { tpsApplicationData: tpsApplicationData } },
+            { new: true }
+        );
+
+        res.status(200).json({ success: true, message: 'TPS progress saved successfully', data: updatedStudentWithRequestId });
     } catch (error) {
         console.error('Error while trying to save progress:', error);
         res.status(500).json({ success: false, message: 'Internal server error' });
