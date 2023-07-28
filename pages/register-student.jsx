@@ -45,7 +45,7 @@ export default function RegisterStudent() {
         <>
             <Head>
                 <title>Sign Up - Transcript Processing System</title>
-                <link rel="shortcut icon" type="image/x-icon" href="images/futologo3.png" />
+                <link rel="shortcut icon" type="image/x-icon" href="images/icon.png" />
                 <link rel=" stylesheet" media="all" href="/css/app.css" />
             </Head>
 

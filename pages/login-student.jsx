@@ -34,7 +34,7 @@ export default function TpsLogin() {
     return (
         <>
             <Head id="Head">
-                <link href="images/futologo3.png" rel="shortcut icon" type="image/x-icon" />
+                <link href="images/icon.png" rel="shortcut icon" type="image/x-icon" />
                 <style id="StylePlaceholder" type="text/css"></style>
                 <link id="ADesktopModules_DNNInfo_News_module_css" rel="stylesheet" type="text/css" href="/css/module_002.css" />
                 <link id="ADesktopModules_Announcements_module_css" rel="stylesheet" type="text/css" href="/css/module.css" />
@@ -47,7 +47,7 @@ export default function TpsLogin() {
 
             <div id="Body">
                 <div id="Form" encType="multipart/form-data">
-                    <link href="images/futologo3.png" rel="shortcut icon" type="image/x-icon" />
+                    <link href="images/icon.png" rel="shortcut icon" type="image/x-icon" />
 
                     <link rel="stylesheet" href="./css/demos.css" />
 
@@ -64,7 +64,7 @@ export default function TpsLogin() {
                                     </div>
                                 </div>
                                 <div className="clear"></div>
-                                <div id="LogoCont" className="left" style={{ backgroundImage: "url('images/futologo3.png')" }}></div>
+                                <div id="LogoCont" className="left" style={{ backgroundImage: "url('images/icon.png')" }}></div>
                                 <h1 className="left">Federal University of Technology,<br />
                                     <span>Owerri</span>
                                 </h1>

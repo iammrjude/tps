@@ -155,7 +155,7 @@ export default function TpsDashboard() {
     return (
         <>
             <Head id="Head">
-                <link href="images/futologo3.png" rel="shortcut icon" type="image/x-icon" />
+                <link href="images/icon.png" rel="shortcut icon" type="image/x-icon" />
                 <style id="StylePlaceholder" type="text/css"></style>
                 <link id="ADesktopModules_DNNInfo_News_module_css" rel="stylesheet" type="text/css" href="/css/module_002.css" />
                 <link id="ADesktopModules_Announcements_module_css" rel="stylesheet" type="text/css" href="/css/module.css" />
@@ -168,7 +168,7 @@ export default function TpsDashboard() {
 
             <div id="Body">
                 <form method="post" action="/" id="Form" encType="multipart/form-data">
-                    <link href="images/futologo3.png" rel="shortcut icon" type="image/x-icon" />
+                    <link href="images/icon.png" rel="shortcut icon" type="image/x-icon" />
 
                     <link rel="stylesheet" href="/css/demos.css" />
 
@@ -178,7 +178,7 @@ export default function TpsDashboard() {
                             <div className="clear"></div>
                             <div className="">
                                 <div className="clear"></div>
-                                <div id="LogoCont" className="left" style={{ backgroundImage: "url('images/futologo3.png')" }}></div>
+                                <div id="LogoCont" className="left" style={{ backgroundImage: "url('images/icon.png')" }}></div>
                                 <h1 className="left">Federal University of Technology,<br />
                                     <span>Owerri</span>
                                 </h1>
@@ -510,7 +510,7 @@ export default function TpsDashboard() {
                                                                                 </tr>
                                                                                 <tr>
                                                                                     <td width='10%' style={{ borderWidth: "1px", textAlign: "center" }}>
-                                                                                        {requestId}
+                                                                                        {`TPS_0${requestId}`}
                                                                                     </td>
                                                                                     <td width='10%' style={{ borderWidth: "1px", textAlign: "center" }}>
                                                                                         {studentId}
@@ -531,15 +531,16 @@ export default function TpsDashboard() {
                                                                                         {paymentStatus}
                                                                                     </td>
                                                                                     <td width='auto%' style={{ borderWidth: "1px", textAlign: "center" }}>
-                                                                                        {paymentStatus == "unpaid" ? (
+                                                                                        {paymentStatus == "paid" ? (
                                                                                             <>
-                                                                                                <button type="button" id="edit" name="edit" value="Edit" className="">Edit</button>
-                                                                                                <button type="button" id="makePayment" name="makePayment" value="Proceed To Make Payment" className="">Proceed To Make Payment</button>
+                                                                                                <input type="button" id="cancel" name="cancel" value="Cancel" className="" />
+                                                                                                <input type="button" id="edit" name="edit" value="Edit" className="" />
+                                                                                                <input type="button" id="makePayment" name="makePayment" value="Continue to Payment" className="" />
                                                                                             </>
                                                                                         ) : (
                                                                                             <>
-                                                                                                <button type="button" id="preview" name="preview" value="Preview" onClick={handlePreview} className="">Preview</button>
-                                                                                                <button type="button" id="download" name="download" value="Download PDF" className="">Download PDF</button>
+                                                                                                <input type="button" id="preview" name="preview" value="Preview" onClick={handlePreview} className="" />
+                                                                                                <input type="button" id="download" name="download" value="Download PDF" className="" />
                                                                                             </>
                                                                                         )
                                                                                         }
