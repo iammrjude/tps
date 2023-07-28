@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 dotenv.config();
-import { Student } from '../../models/models';
+import { Student } from '../../components/models/models';
 const dbURI = process.env.CONNECTION_STRING;
 
 // Student Login route

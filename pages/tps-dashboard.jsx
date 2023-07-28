@@ -24,6 +24,10 @@ export default function TpsDashboard() {
     const [cost, setCost] = useState('');
     const [paymentStatus, setPaymentStatus] = useState('');
 
+    function handleProcessPayment() {
+        router.push('/pay');
+    }
+
     function handleSetInfoIsCorrect(e) {
         if (infoIsCorrect == true) {
             setInfoIsCorrect(false);
@@ -535,7 +539,7 @@ export default function TpsDashboard() {
                                                                                             <>
                                                                                                 <input type="button" id="cancel" name="cancel" value="Cancel" className="" />
                                                                                                 <input type="button" id="edit" name="edit" value="Edit" className="" />
-                                                                                                <input type="button" id="makePayment" name="makePayment" value="Continue to Payment" className="" />
+                                                                                                <input onClick={handleProcessPayment} type="button" id="makePayment" name="makePayment" value="Continue to Payment" className="" />
                                                                                             </>
                                                                                         ) : (
                                                                                             <>

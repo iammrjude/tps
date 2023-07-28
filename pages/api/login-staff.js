@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 dotenv.config();
-import { Staff } from '../../models/models';
+import { Staff } from '../../components/models/models';
 const dbURI = process.env.CONNECTION_STRING;
 
 // Staff Login route

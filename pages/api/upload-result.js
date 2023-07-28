@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 dotenv.config();
-import { Result } from '../../models/models';
+import { Result } from '../../components/models/models';
 const dbURI = process.env.CONNECTION_STRING;
 
 // Upload Result route
