@@ -1,34 +1,31 @@
 import Head from "next/head";
-import { ethers } from 'ethers';
 import { useEffect, useState } from 'react';
 import 'tailwindcss/tailwind.css'; // Import Tailwind CSS
-import contractAbi from '../abis/contractAbi';
+import contractAbi from '@/abis/contractAbi';
 import { useWeb3React } from '@web3-react/core'
 import { injected } from "@/components/wallet/connectors";
 import currentGasPrice from "@/components/wallet/gasPrice";
 import Decimal from "decimal.js";
+import Link from "next/link";
 
 export default function TranscriptPaymentPage() {
     const { account, active, activate, chainId, connector, library, deactivate } = useWeb3React()
     const [amount, setAmount] = useState(0);
-    // const [contractAddress, setContractAddress] = useState('');
-    // const contractAddress = "0x57b5cCb71Bb1BdF0460b8A5819C354AD8087673d"; // 80001
-    const contractAddress = "0x4ca9D931f24E0292226e895bd0beB8aD979A5631"; // 97
+    const contractAddress = "0x04F5f58DB4832e53A55a49c273FF00541a6Cf45C"; // 97
     const [paymentConfirmed, setPaymentConfirmed] = useState(false);
     const [transactionHash, setTransactionHash] = useState('');
 
     async function handleWalletConnect() {
         try {
-            // await activate(injected, undefined, true);
             await activate(injected);
         } catch (error) {
             console.error("Error while trying to connect wallet:", error);
         }
     }
 
-    function convertToWei(number) {
+    function convertToGwei(number) {
         const dividend = new Decimal(`${number}`);
-        const divisor = new Decimal(`${1E18}`);
+        const divisor = new Decimal(`${1E9}`);
         const inWei = dividend.div(divisor);
         return inWei;
     }
@@ -37,11 +34,16 @@ export default function TranscriptPaymentPage() {
         try {
             const contract = new library.eth.Contract(contractAbi, library.utils.toChecksumAddress(contractAddress));
             const gasPrice = await currentGasPrice(library);
-            const amountInWei = convertToWei(amount);
-            const paymentTx = await contract.methods.requestTranscript({ value: 17500 }).send({ from: account, gasPrice: gasPrice });
-            const receipt = await paymentTx.wait();
-            setTransactionHash(receipt.transactionHash);
-            setPaymentConfirmed(true);
+            const amountToPay = await library.utils.toWei(amount, 'gwei');
+            const paymentTx = await contract.methods.requestTranscript({ value: amountToPay.toString() }).send({ from: account, gasPrice: gasPrice })
+                .on('transactionHash', txHash => {
+                    const bscScanUrl = `https://testnet.bscscan.com/tx/${txHash}`;
+                    setTransactionHash(bscScanUrl);
+                    alert(`Payment Successful, Please wait for Verification Message`);
+                })
+                .on('receipt', r => {
+                    setPaymentConfirmed(true);
+                })
         } catch (error) {
             console.error("Payment failed:", error);
             setTransactionHash('');
@@ -61,7 +63,7 @@ export default function TranscriptPaymentPage() {
     async function fetchTranscriptPrice() {
         try {
             const contract = new library.eth.Contract(contractAbi, library.utils.toChecksumAddress(contractAddress));
-            const price = await contract.methods.transcriptPrice().call();
+            const price = await contract.methods.processingFee().call();
             setAmount(Number(price));
         } catch (error) {
             console.error("Failed to fetch transcript price:", error);
@@ -74,6 +76,15 @@ export default function TranscriptPaymentPage() {
             fetchTranscriptPrice();
         }
     }, [account, library]);
+
+    useEffect(() => {
+        if (paymentConfirmed === true && !(transactionHash === '')) {
+            alert(`Payment Successful!!, View your Transaction Receipt at: ${transactionHash}`);
+            // update payment status in database
+            alert("Redirecting to tps-dashboard ........");
+            // redirect back to tps-dashboard
+        }
+    }, [paymentConfirmed, transactionHash]);
 
     return (
         <>
@@ -107,8 +118,8 @@ export default function TranscriptPaymentPage() {
                                 Pay Now
                             </button>
                             {transactionHash && (
-                                <div className="mt-4">
-                                    Transaction Hash: <code>{transactionHash}</code>
+                                <div className="container mt-4">
+                                    <p className="truncate">Transaction Hash: <code><Link href={transactionHash}>{transactionHash}</Link></code></p>
                                 </div>
                             )}
                         </>

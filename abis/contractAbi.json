@@ -3,7 +3,7 @@
 		"inputs": [
 			{
 				"internalType": "uint256",
-				"name": "price",
+				"name": "fee",
 				"type": "uint256"
 			}
 		],
@@ -30,6 +30,33 @@
 		"type": "event"
 	},
 	{
+		"inputs": [],
+		"name": "requestTranscript",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "fee",
+				"type": "uint256"
+			}
+		],
+		"name": "setTranscriptProcessingFee",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "withdrawFunds",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"inputs": [
 			{
 				"internalType": "address",
@@ -50,14 +77,7 @@
 	},
 	{
 		"inputs": [],
-		"name": "requestTranscript",
-		"outputs": [],
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "transcriptPrice",
+		"name": "processingFee",
 		"outputs": [
 			{
 				"internalType": "uint256",
@@ -79,13 +99,6 @@
 			}
 		],
 		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "withdrawFunds",
-		"outputs": [],
-		"stateMutability": "nonpayable",
 		"type": "function"
 	}
 ]
