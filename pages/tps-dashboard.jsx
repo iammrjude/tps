@@ -25,7 +25,8 @@ export default function TpsDashboard() {
     const [paymentStatus, setPaymentStatus] = useState('');
 
     function handleProcessPayment() {
-        router.push('/pay');
+        // Redirect to payment page
+        router.push('/pay-tps-fee');
     }
 
     function handleSetInfoIsCorrect(e) {
@@ -42,11 +43,9 @@ export default function TpsDashboard() {
         router.push('/transcript');
     }
 
-    async function updatePaymentStatus(studentId) { }
-
     async function saveProgress(studentId) {
         try {
-            const data = { studentId: studentId, program: programSelectedValue, faculty: facultySelectedValue, department: departmentSelectedValue, cost: '17500', paymentStatus: 'paid' };
+            const data = { studentId: studentId, program: programSelectedValue, faculty: facultySelectedValue, department: departmentSelectedValue, cost: '17500', paymentStatus: 'unpaid' };
             const response = await fetch(`/api/save-progress`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -535,7 +534,7 @@ export default function TpsDashboard() {
                                                                                         {paymentStatus}
                                                                                     </td>
                                                                                     <td width='auto%' style={{ borderWidth: "1px", textAlign: "center" }}>
-                                                                                        {paymentStatus == "paid" ? (
+                                                                                        {paymentStatus == "unpaid" ? (
                                                                                             <>
                                                                                                 <input type="button" id="cancel" name="cancel" value="Cancel" className="" />
                                                                                                 <input type="button" id="edit" name="edit" value="Edit" className="" />

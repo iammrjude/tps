@@ -7,8 +7,10 @@ import { injected } from "@/components/wallet/connectors";
 import currentGasPrice from "@/components/wallet/gasPrice";
 import Decimal from "decimal.js";
 import Link from "next/link";
+import { useRouter } from 'next/router';
 
 export default function TranscriptPaymentPage() {
+    const router = useRouter();
     const { account, active, activate, chainId, connector, library, deactivate } = useWeb3React()
     const [amount, setAmount] = useState(0);
     const contractAddress = "0x04F5f58DB4832e53A55a49c273FF00541a6Cf45C"; // 97
@@ -23,19 +25,22 @@ export default function TranscriptPaymentPage() {
         }
     }
 
-    function convertToGwei(number) {
-        const dividend = new Decimal(`${number}`);
-        const divisor = new Decimal(`${1E9}`);
-        const inWei = dividend.div(divisor);
-        return inWei;
-    }
-
     async function handlePayment() {
         try {
             const contract = new library.eth.Contract(contractAbi, library.utils.toChecksumAddress(contractAddress));
             const gasPrice = await currentGasPrice(library);
+            const hasAlreadyPaid = paymentConfirmed;
+            if (hasAlreadyPaid === true) {
+                alert("You Have Already Paid The Transcript Processing Fee");
+                // update payment status in database
+                const studentEmail = sessionStorage.getItem('studentEmail');
+                updatePaymentStatus(studentEmail, 'paid');
+                alert("Redirecting to tps-dashboard ........");
+                // redirect back to tps-dashboard
+                return router.push('/tps-dashboard');
+            }
             const amountToPay = await library.utils.toWei(amount, 'gwei');
-            const paymentTx = await contract.methods.requestTranscript({ value: amountToPay.toString() }).send({ from: account, gasPrice: gasPrice })
+            await contract.methods.requestTranscript({ value: amountToPay.toString() }).send({ from: account, gasPrice: gasPrice })
                 .on('transactionHash', txHash => {
                     const bscScanUrl = `https://testnet.bscscan.com/tx/${txHash}`;
                     setTransactionHash(bscScanUrl);
@@ -70,6 +75,19 @@ export default function TranscriptPaymentPage() {
         }
     }
 
+    async function updatePaymentStatus(email, paymentStatus) {
+        try {
+            const data = { email, paymentStatus };
+            await fetch(`/api/update-payment-status`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+        } catch (error) {
+            console.error('Error while trying to save progress:', error);
+        }
+    }
+
     useEffect(() => {
         if (library && library.eth && account) {
             checkPaymentStatus();
@@ -79,10 +97,13 @@ export default function TranscriptPaymentPage() {
 
     useEffect(() => {
         if (paymentConfirmed === true && !(transactionHash === '')) {
-            alert(`Payment Successful!!, View your Transaction Receipt at: ${transactionHash}`);
+            alert(`Payment Successful!!\nView your Transaction Receipt at: ${transactionHash}`);
             // update payment status in database
+            const studentEmail = sessionStorage.getItem('studentEmail');
+            updatePaymentStatus(studentEmail, 'paid');
             alert("Redirecting to tps-dashboard ........");
             // redirect back to tps-dashboard
+            router.push('/tps-dashboard');
         }
     }, [paymentConfirmed, transactionHash]);
 
