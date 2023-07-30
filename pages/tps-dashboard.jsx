@@ -511,44 +511,52 @@ export default function TpsDashboard() {
                                                                                     <td width='auto' style={{ borderWidth: "1px", fontWeight: "bold", textAlign: "center" }}>
                                                                                     </td>
                                                                                 </tr>
-                                                                                <tr>
-                                                                                    <td width='10%' style={{ borderWidth: "1px", textAlign: "center" }}>
-                                                                                        {`TPS_0${requestId}`}
-                                                                                    </td>
-                                                                                    <td width='10%' style={{ borderWidth: "1px", textAlign: "center" }}>
-                                                                                        {studentId}
-                                                                                    </td>
-                                                                                    <td width='10%' style={{ borderWidth: "1px", textAlign: "center" }}>
-                                                                                        {program}
-                                                                                    </td>
-                                                                                    <td width='7%' style={{ borderWidth: "1px", textAlign: "center" }}>
-                                                                                        {faculty}
-                                                                                    </td>
-                                                                                    <td width='7%' style={{ borderWidth: "1px", textAlign: "center" }}>
-                                                                                        {department}
-                                                                                    </td>
-                                                                                    <td width='7%' style={{ borderWidth: "1px", textAlign: "center" }}>
-                                                                                        {cost}
-                                                                                    </td>
-                                                                                    <td width='7%' style={{ borderWidth: "1px", textAlign: "center" }}>
-                                                                                        {paymentStatus}
-                                                                                    </td>
-                                                                                    <td width='auto%' style={{ borderWidth: "1px", textAlign: "center" }}>
-                                                                                        {paymentStatus == "unpaid" ? (
-                                                                                            <>
-                                                                                                <input type="button" id="cancel" name="cancel" value="Cancel" className="" />
-                                                                                                <input type="button" id="edit" name="edit" value="Edit" className="" />
-                                                                                                <input onClick={handleProcessPayment} type="button" id="makePayment" name="makePayment" value="Continue to Payment" className="" />
-                                                                                            </>
-                                                                                        ) : (
-                                                                                            <>
-                                                                                                <input type="button" id="preview" name="preview" value="Preview" onClick={handlePreview} className="" />
-                                                                                                <input type="button" id="download" name="download" value="Download PDF" className="" />
-                                                                                            </>
-                                                                                        )
-                                                                                        }
-                                                                                    </td>
-                                                                                </tr>
+                                                                                {!paymentStatus === "" && (
+                                                                                    <>
+                                                                                        <tr>
+                                                                                            <td width='10%' style={{ borderWidth: "1px", textAlign: "center" }}>
+                                                                                                {`TPS_0${requestId}`}
+                                                                                            </td>
+                                                                                            <td width='10%' style={{ borderWidth: "1px", textAlign: "center" }}>
+                                                                                                {studentId}
+                                                                                            </td>
+                                                                                            <td width='10%' style={{ borderWidth: "1px", textAlign: "center" }}>
+                                                                                                {program}
+                                                                                            </td>
+                                                                                            <td width='7%' style={{ borderWidth: "1px", textAlign: "center" }}>
+                                                                                                {faculty}
+                                                                                            </td>
+                                                                                            <td width='7%' style={{ borderWidth: "1px", textAlign: "center" }}>
+                                                                                                {department}
+                                                                                            </td>
+                                                                                            <td width='7%' style={{ borderWidth: "1px", textAlign: "center" }}>
+                                                                                                {cost}
+                                                                                            </td>
+                                                                                            <td width='7%' style={{ borderWidth: "1px", textAlign: "center" }}>
+                                                                                                {paymentStatus}
+                                                                                            </td>
+                                                                                            <td width='auto%' style={{ borderWidth: "1px", textAlign: "center" }}>
+                                                                                                {paymentStatus == "unpaid" ? (
+                                                                                                    <>
+                                                                                                        <input type="button" id="cancel" name="cancel" value="Cancel" className="" />
+                                                                                                        <input type="button" id="edit" name="edit" value="Edit" className="" />
+                                                                                                        <input onClick={handleProcessPayment} type="button" id="makePayment" name="makePayment" value="Continue to Payment" className="" />
+                                                                                                    </>
+                                                                                                ) : (
+                                                                                                    <>
+                                                                                                        {!paymentStatus === "" && (
+                                                                                                            <>
+                                                                                                                <input type="button" id="preview" name="preview" value="Preview" onClick={handlePreview} className="" />
+                                                                                                                <input type="button" id="download" name="download" value="Download PDF" className="" />
+                                                                                                            </>
+                                                                                                        )}
+                                                                                                    </>
+                                                                                                )
+                                                                                                }
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                    </>
+                                                                                )}
                                                                             </tbody>
                                                                         </table>
                                                                     </div>

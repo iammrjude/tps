@@ -51,6 +51,21 @@ const studentSchema = new mongoose.Schema({
     faculty: { type: String, required: true },
     department: { type: String, required: true },
     option: { type: String, required: false },
+    registeredCourses: {
+        type: [{
+            session: { type: String, required: true },
+            level: { type: String, required: true },
+            semesters: [{
+                semester: { type: Number, required: true },
+                courses: [{
+                    courseCode: { type: String, required: true },
+                    courseTitle: { type: String, required: true },
+                    unit: { type: Number, required: true },
+                }]
+            }]
+        }],
+        required: false
+    },
     tpsApplicationData: {
         type: {
             requestId: { type: String, required: false },
