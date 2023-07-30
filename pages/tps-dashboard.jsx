@@ -1,6 +1,8 @@
 import Head from "next/head";
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
+import { saveAs } from 'file-saver';
 
 export default function TpsDashboard() {
     const router = useRouter();
@@ -22,7 +24,76 @@ export default function TpsDashboard() {
     const [faculty, setFaculty] = useState('');
     const [department, setDepartment] = useState('');
     const [cost, setCost] = useState('');
-    const [paymentStatus, setPaymentStatus] = useState('');
+    const [paymentStatus, setPaymentStatus] = useState(null);
+
+    async function generatePDF() {
+        const firstSemester = [
+            { courseCode: "GST101", courseTitle: "Use of English I", unit: 2, grade: "A" },
+            { courseCode: "GST103", courseTitle: "Humanities I", unit: 1, grade: "A" },
+            { courseCode: "MTH101", courseTitle: "Elementary Mathematics I", unit: 4, grade: "A" },
+            { courseCode: "PHY101", courseTitle: "General Physics I", unit: 4, grade: "A" },
+            { courseCode: "CHM101", courseTitle: "General Chemistry I", unit: 4, grade: "A" },
+            { courseCode: "BIO101", courseTitle: "Biology for Physical Sciences", unit: 3, grade: "A" },
+            { courseCode: "ENG101", courseTitle: "Workshop Practice I", unit: 1, grade: "A" },
+            { courseCode: "ENG103", courseTitle: "Engineering Drawing I", unit: 1, grade: "A" },
+            { courseCode: "FRN101", courseTitle: "Use of French I", unit: 1, grade: "A" },
+        ];
+
+        const secondSemester = [
+            { courseCode: "GST102", courseTitle: "Use of English II", unit: 2, grade: "A" },
+            { courseCode: "GST108", courseTitle: "Social Science I", unit: 2, grade: "A" },
+            { courseCode: "GST110", courseTitle: "Science, Technology & Society", unit: 1, grade: "A" },
+            { courseCode: "MTH102", courseTitle: "Elementary Mathematics II", unit: 4, grade: "A" },
+            { courseCode: "PHY102", courseTitle: "General Physics II", unit: 4, grade: "A" },
+            { courseCode: "CHM102", courseTitle: "General Chemistry II", unit: 4, grade: "A" },
+            { courseCode: "ENG102", courseTitle: "Workshop Practice II", unit: 1, grade: "A" },
+            { courseCode: "ENG104", courseTitle: "Engineering Drawing II", unit: 1, grade: "A" },
+            { courseCode: "FRN102", courseTitle: "Use of French II", unit: 1, grade: "A" },
+        ];
+
+        const regNumber = 20171045385;
+        const semester = 1;
+        const session = "2017-2018";
+
+        const results = [firstSemester, secondSemester];
+        const pdfDoc = await PDFDocument.create();
+
+        for (const result of results) {
+            const semesterResult = result;
+
+            const currentPage = pdfDoc.addPage();
+            const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+            currentPage.setFont(font);
+            currentPage.setFontSize(12);
+            const { width, height } = currentPage.getSize();
+
+            currentPage.drawText(`RegNumber: ${regNumber}`, { x: 50, y: height - 50, });
+            currentPage.drawText(`Semester: ${semester}`, { x: 50, y: height - 70, });
+            currentPage.drawText(`Session: ${session}`, { x: 50, y: height - 90, });
+
+            let y = height - 150;
+            for (let i = 0; i < semesterResult.length; i++) {
+                const course = semesterResult[i];
+                currentPage.drawText(`${course.courseCode}: ${course.grade}`, { x: 50, y });
+                y -= 20;
+            }
+            currentPage.drawText('--- Next page ---', { x: 50, y: 50, });
+        }
+
+        const pdfBytes = await pdfDoc.save();
+        return pdfBytes;
+    }
+
+    async function handleGeneratePDF() {
+        try {
+            const pdfBytes = await generatePDF();
+            const pdfBlob = new Blob([pdfBytes], { type: 'application/pdf' });
+
+            saveAs(pdfBlob, 'transcript.pdf');
+        } catch (error) {
+            console.log('Error generating PDF:', error);
+        }
+    }
 
     function handleProcessPayment() {
         // Redirect to payment page
@@ -511,51 +582,48 @@ export default function TpsDashboard() {
                                                                                     <td width='auto' style={{ borderWidth: "1px", fontWeight: "bold", textAlign: "center" }}>
                                                                                     </td>
                                                                                 </tr>
-                                                                                {!paymentStatus === "" && (
-                                                                                    <>
-                                                                                        <tr>
-                                                                                            <td width='10%' style={{ borderWidth: "1px", textAlign: "center" }}>
-                                                                                                {`TPS_0${requestId}`}
-                                                                                            </td>
-                                                                                            <td width='10%' style={{ borderWidth: "1px", textAlign: "center" }}>
-                                                                                                {studentId}
-                                                                                            </td>
-                                                                                            <td width='10%' style={{ borderWidth: "1px", textAlign: "center" }}>
-                                                                                                {program}
-                                                                                            </td>
-                                                                                            <td width='7%' style={{ borderWidth: "1px", textAlign: "center" }}>
-                                                                                                {faculty}
-                                                                                            </td>
-                                                                                            <td width='7%' style={{ borderWidth: "1px", textAlign: "center" }}>
-                                                                                                {department}
-                                                                                            </td>
-                                                                                            <td width='7%' style={{ borderWidth: "1px", textAlign: "center" }}>
-                                                                                                {cost}
-                                                                                            </td>
-                                                                                            <td width='7%' style={{ borderWidth: "1px", textAlign: "center" }}>
-                                                                                                {paymentStatus}
-                                                                                            </td>
-                                                                                            <td width='auto%' style={{ borderWidth: "1px", textAlign: "center" }}>
-                                                                                                {paymentStatus == "unpaid" ? (
-                                                                                                    <>
-                                                                                                        <input type="button" id="cancel" name="cancel" value="Cancel" className="" />
-                                                                                                        <input type="button" id="edit" name="edit" value="Edit" className="" />
-                                                                                                        <input onClick={handleProcessPayment} type="button" id="makePayment" name="makePayment" value="Continue to Payment" className="" />
-                                                                                                    </>
-                                                                                                ) : (
-                                                                                                    <>
-                                                                                                        {!paymentStatus === "" && (
-                                                                                                            <>
-                                                                                                                <input type="button" id="preview" name="preview" value="Preview" onClick={handlePreview} className="" />
-                                                                                                                <input type="button" id="download" name="download" value="Download PDF" className="" />
-                                                                                                            </>
-                                                                                                        )}
-                                                                                                    </>
-                                                                                                )
-                                                                                                }
-                                                                                            </td>
-                                                                                        </tr>
-                                                                                    </>
+                                                                                {paymentStatus && (
+                                                                                    <tr>
+                                                                                        <td width='10%' style={{ borderWidth: "1px", textAlign: "center" }}>
+                                                                                            {`TPS_0${requestId}`}
+                                                                                        </td>
+                                                                                        <td width='10%' style={{ borderWidth: "1px", textAlign: "center" }}>
+                                                                                            {studentId}
+                                                                                        </td>
+                                                                                        <td width='10%' style={{ borderWidth: "1px", textAlign: "center" }}>
+                                                                                            {program}
+                                                                                        </td>
+                                                                                        <td width='7%' style={{ borderWidth: "1px", textAlign: "center" }}>
+                                                                                            {faculty}
+                                                                                        </td>
+                                                                                        <td width='7%' style={{ borderWidth: "1px", textAlign: "center" }}>
+                                                                                            {department}
+                                                                                        </td>
+                                                                                        <td width='7%' style={{ borderWidth: "1px", textAlign: "center" }}>
+                                                                                            {cost}
+                                                                                        </td>
+                                                                                        <td width='7%' style={{ borderWidth: "1px", textAlign: "center" }}>
+                                                                                            {paymentStatus}
+                                                                                        </td>
+                                                                                        <td width='auto%' style={{ borderWidth: "1px", textAlign: "center" }}>
+                                                                                            {paymentStatus == "unpaid" ? (
+                                                                                                <>
+                                                                                                    <input type="button" id="cancel" name="cancel" value="Cancel" className="" />
+                                                                                                    <input type="button" id="edit" name="edit" value="Edit" className="" />
+                                                                                                    <input onClick={handleProcessPayment} type="button" id="makePayment" name="makePayment" value="Continue to Payment" className="" />
+                                                                                                </>
+                                                                                            ) : (
+                                                                                                <>
+                                                                                                    {paymentStatus && (
+                                                                                                        <>
+                                                                                                            <input type="button" id="preview" name="preview" value="Preview" onClick={handlePreview} className="" />
+                                                                                                            <input type="button" id="download" name="download" value="Download PDF" onClick={handleGeneratePDF} className="" />
+                                                                                                        </>
+                                                                                                    )}
+                                                                                                </>
+                                                                                            )}
+                                                                                        </td>
+                                                                                    </tr>
                                                                                 )}
                                                                             </tbody>
                                                                         </table>
