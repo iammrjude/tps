@@ -1,20 +1,22 @@
 import Head from "next/head";
 import 'tailwindcss/tailwind.css';
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 
 export default function Transcript() {
+    const router = useRouter();
     const [sessionsArray, setSessionsArray] = useState([]);
-    const [fullName, setFullName] = useState('');
-    const [sex, setSex] = useState('');
-    const [dob, setDob] = useState('');
-    const [studentId, setStudentId] = useState('');
-    const [nationality, setNationality] = useState('');
-    const [stateOfOrigin, setStateOfOrigin] = useState('');
-    const [dateOfEntry, setDateOfEntry] = useState('');
-    const [modeOfEntry, setModeOfEntry] = useState('');
-    const [faculty, setFaculty] = useState('');
-    const [department, setDepartment] = useState('');
-    const [option, setOption] = useState('');
+    const [fullName, setFullName] = useState(null);
+    const [sex, setSex] = useState(null);
+    const [dob, setDob] = useState(null);
+    const [studentId, setStudentId] = useState(null);
+    const [nationality, setNationality] = useState(null);
+    const [stateOfOrigin, setStateOfOrigin] = useState(null);
+    const [dateOfEntry, setDateOfEntry] = useState(null);
+    const [modeOfEntry, setModeOfEntry] = useState(null);
+    const [faculty, setFaculty] = useState(null);
+    const [department, setDepartment] = useState(null);
+    const [option, setOption] = useState(null);
 
     async function getStudentInfo(studentEmail) {
         const response = await fetch(`/api/student-info?email=${studentEmail}`, {
@@ -23,8 +25,8 @@ export default function Transcript() {
         });
         const jsonResponse = await response.json();
         const studentInfo = jsonResponse.data;
-        const studentName = `${studentInfo.firstName} ${studentInfo.middleName} ${studentInfo.lastName}`;
-        setFullName(studentName);
+        
+        setFullName(`${studentInfo.firstName} ${studentInfo.middleName} ${studentInfo.lastName}`);
         setSex(studentInfo.sex);
         setDob(studentInfo.dob);
         setStudentId(studentInfo.studentId);
@@ -83,10 +85,15 @@ export default function Transcript() {
         const studentEmail = sessionStorage.getItem('studentEmail');
         if (studentEmail) {
             getStudentInfo(studentEmail);
-            getStudentRecord(faculty, department, studentId);
         } else {
-            // Redirect to login-student page
-            router.push('/login-student');
+            // Redirect to tps-dashboard page
+            router.push('/tps-dashboard');
+        }
+    }, []);
+
+    useEffect(() => {
+        if (faculty && department && studentId) {
+            getStudentRecord(faculty, department, studentId);
         }
     }, [faculty, department, studentId]);
 

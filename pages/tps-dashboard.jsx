@@ -6,60 +6,64 @@ import { saveAs } from 'file-saver';
 
 export default function TpsDashboard() {
     const router = useRouter();
-    const [firstName, setFirstName] = useState('');
-    const [middleName, setMiddleName] = useState('');
-    const [lastName, setLastName] = useState('');
-    const [studentId, setStudentId] = useState('');
-    const [email, setEmail] = useState('');
-    const [programSelectedValue, setProgramSelectedValue] = useState('');
-    const [facultySelectedValue, setFacultySelectedValue] = useState('');
-    const [departmentSelectedValue, setDepartmentSelectedValue] = useState('');
+    const [firstName, setFirstName] = useState(null);
+    const [middleName, setMiddleName] = useState(null);
+    const [lastName, setLastName] = useState(null);
+    const [email, setEmail] = useState(null);
+    const [programSelectedValue, setProgramSelectedValue] = useState(null);
+    const [facultySelectedValue, setFacultySelectedValue] = useState(null);
+    const [departmentSelectedValue, setDepartmentSelectedValue] = useState(null);
     const [isFacultyDisabled, setIsFacultyDisabled] = useState(true);
     const [isDepartmentDisabled, setIsDepartmentDisabled] = useState(true);
     const [isNewApplication, setIsNewApplication] = useState(false);
-    const [fullName, setFullName] = useState('');
     const [infoIsCorrect, setInfoIsCorrect] = useState(false);
-    const [requestId, setRequestId] = useState('');
-    const [program, setProgram] = useState('');
-    const [faculty, setFaculty] = useState('');
-    const [department, setDepartment] = useState('');
-    const [cost, setCost] = useState('');
+    const [requestId, setRequestId] = useState(null);
+    const [program, setProgram] = useState(null);
+    const [progressFaculty, setProgressFaculty] = useState(null);
+    const [progressDepartment, setProgressDepartment] = useState(null);
+    const [cost, setCost] = useState(null);
     const [paymentStatus, setPaymentStatus] = useState(null);
+    const [sessionsArray, setSessionsArray] = useState([]);
+    const [fullName, setFullName] = useState(null);
+    const [sex, setSex] = useState(null);
+    const [dob, setDob] = useState(null);
+    const [studentId, setStudentId] = useState(null);
+    const [nationality, setNationality] = useState(null);
+    const [stateOfOrigin, setStateOfOrigin] = useState(null);
+    const [dateOfEntry, setDateOfEntry] = useState(null);
+    const [modeOfEntry, setModeOfEntry] = useState(null);
+    const [faculty, setFaculty] = useState(null);
+    const [department, setDepartment] = useState(null);
+    const [option, setOption] = useState(null);
+
+    // Function to get grade points based on grade
+    function getPoints(grade) {
+        switch (grade) {
+            case "A":
+                return 5;
+            case "B":
+                return 4;
+            case "C":
+                return 3;
+            case "D":
+                return 2;
+            case "E":
+                return 1;
+            case "F":
+                return 0;
+            default:
+                return 0;
+        }
+    }
 
     async function generatePDF() {
-        const firstSemester = [
-            { courseCode: "GST101", courseTitle: "Use of English I", unit: 2, grade: "A" },
-            { courseCode: "GST103", courseTitle: "Humanities I", unit: 1, grade: "A" },
-            { courseCode: "MTH101", courseTitle: "Elementary Mathematics I", unit: 4, grade: "A" },
-            { courseCode: "PHY101", courseTitle: "General Physics I", unit: 4, grade: "A" },
-            { courseCode: "CHM101", courseTitle: "General Chemistry I", unit: 4, grade: "A" },
-            { courseCode: "BIO101", courseTitle: "Biology for Physical Sciences", unit: 3, grade: "A" },
-            { courseCode: "ENG101", courseTitle: "Workshop Practice I", unit: 1, grade: "A" },
-            { courseCode: "ENG103", courseTitle: "Engineering Drawing I", unit: 1, grade: "A" },
-            { courseCode: "FRN101", courseTitle: "Use of French I", unit: 1, grade: "A" },
-        ];
-
-        const secondSemester = [
-            { courseCode: "GST102", courseTitle: "Use of English II", unit: 2, grade: "A" },
-            { courseCode: "GST108", courseTitle: "Social Science I", unit: 2, grade: "A" },
-            { courseCode: "GST110", courseTitle: "Science, Technology & Society", unit: 1, grade: "A" },
-            { courseCode: "MTH102", courseTitle: "Elementary Mathematics II", unit: 4, grade: "A" },
-            { courseCode: "PHY102", courseTitle: "General Physics II", unit: 4, grade: "A" },
-            { courseCode: "CHM102", courseTitle: "General Chemistry II", unit: 4, grade: "A" },
-            { courseCode: "ENG102", courseTitle: "Workshop Practice II", unit: 1, grade: "A" },
-            { courseCode: "ENG104", courseTitle: "Engineering Drawing II", unit: 1, grade: "A" },
-            { courseCode: "FRN102", courseTitle: "Use of French II", unit: 1, grade: "A" },
-        ];
-
-        const regNumber = 20171045385;
-        const semester = 1;
-        const session = "2017-2018";
-
-        const results = [firstSemester, secondSemester];
         const pdfDoc = await PDFDocument.create();
 
-        for (const result of results) {
-            const semesterResult = result;
+        for (const session of sessionsArray) {
+            const currentSession = session.session;
+            const sessionResult = session.sessionResult;
+            const firstSemester = sessionResult[0];
+            const secondSemester = sessionResult[1];
 
             const currentPage = pdfDoc.addPage();
             const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
@@ -67,17 +71,230 @@ export default function TpsDashboard() {
             currentPage.setFontSize(12);
             const { width, height } = currentPage.getSize();
 
-            currentPage.drawText(`RegNumber: ${regNumber}`, { x: 50, y: height - 50, });
-            currentPage.drawText(`Semester: ${semester}`, { x: 50, y: height - 70, });
-            currentPage.drawText(`Session: ${session}`, { x: 50, y: height - 90, });
+            // Set up text positions and styles
+            const textContent = [
+                { text: "FEDERAL UNIVERSITY OF TECHNOLOGY, OWERRI.", fontSize: 14 },
+                { text: "OFFICE OF THE REGISTRAR", fontSize: 12 },
+                { text: "(Records & Statistics Unit)", fontSize: 12 },
+                { text: "P.M.B. 1526", fontSize: 12 },
+                { text: "Owerri Nigeria", fontSize: 12 },
+                { text: "STUDENT'S ACADEMIC TRANSCRIPT", fontSize: 12 },
+            ];
 
-            let y = height - 150;
-            for (let i = 0; i < semesterResult.length; i++) {
-                const course = semesterResult[i];
-                currentPage.drawText(`${course.courseCode}: ${course.grade}`, { x: 50, y });
-                y -= 20;
+            const lineHeight = 15;
+            const pageCenterX = currentPage.getWidth() / 2;
+
+            // Calculate total text block height
+            const totalHeight = textContent.length * lineHeight;
+            let startY = currentPage.getHeight() - 50;
+
+            // Add each text element to the PDF
+            for (const { text, fontSize } of textContent) {
+                const textWidth = font.widthOfTextAtSize(text, fontSize);
+
+                currentPage.drawText(text, {
+                    x: pageCenterX - textWidth / 2,
+                    y: startY,
+                    size: fontSize,
+                    font: font,
+                    color: rgb(0, 0, 0), // black color
+                });
+
+                startY -= lineHeight;
             }
-            currentPage.drawText('--- Next page ---', { x: 50, y: 50, });
+
+            // Set up table data (replace the placeholders with actual data)
+            // Define the table structure
+            const table = [
+                ["Name of Student", "Sex", "Date of Birth", "Reg. No."],
+                [`${fullName.toUpperCase()}`, `${sex}`, `${dob}`, `${studentId}`],
+                ["Nationality", "State of Origin", "Date of Entry", "Mode of Entry"],
+                [`${nationality}`, `${stateOfOrigin}`, `${dateOfEntry}`, `${modeOfEntry}`],
+                ["School", "Department:", department, ""],
+                [`${faculty}`, "Option:", `${option}`, ""],
+            ];
+
+            // Set up table dimensions and cell padding
+            const tableStartX = 50;
+            const tableStartY = startY; // Set vertical position below the text content
+            const cellWidth = 125;
+            const cellHeight = 25;
+            const maxFontSize = 12;
+            const cellPadding = 5;
+
+            // Function to draw a table cell
+            const drawCell = (text, x, y, width, height) => {
+                let fontSize = maxFontSize;
+
+                while (fontSize > 0) {
+                    const textWidth = font.widthOfTextAtSize(text, fontSize);
+                    const textHeight = font.heightAtSize(fontSize);
+
+                    if (textWidth <= width - 2 * cellPadding && textHeight <= height - 2 * cellPadding) {
+                        break;
+                    }
+
+                    fontSize--;
+                }
+
+                const textX = x + (width - font.widthOfTextAtSize(text, fontSize)) / 2;
+                const textY = y - (height - font.heightAtSize(fontSize)) / 2 - cellPadding;
+
+                currentPage.drawText(text, {
+                    x: textX,
+                    y: textY,
+                    size: fontSize,
+                    font: font,
+                    color: rgb(0, 0, 0), // black color
+                });
+            };
+
+            // Function to draw the entire table
+            let currentY;
+            const drawTable = (data) => {
+                currentY = tableStartY;
+                for (const row of data) {
+                    let currentX = tableStartX;
+
+                    for (const cell of row) {
+                        // Draw the cell border
+                        currentPage.drawRectangle({
+                            x: currentX,
+                            y: currentY - cellHeight,
+                            width: cellWidth,
+                            height: cellHeight,
+                            borderColor: rgb(0, 0, 0), // black color
+                            borderWidth: 1,
+                        });
+
+                        // Draw the cell content
+                        drawCell(cell, currentX, currentY, cellWidth, cellHeight);
+
+                        currentX += cellWidth;
+                    }
+
+                    currentY -= cellHeight;
+                }
+            };
+
+            // Draw the first table
+            drawTable(table);
+
+            // Define the table data
+            const tableData = [
+                ["Course Code", "Title of Course", "Units", "Grade", "Total Grade Points", "Cum G.P.A."],
+                [], // Add an empty row for formatting
+                ["", `${currentSession} B/F`, "", "", "", ""],
+                ["", `${currentSession} HARMATTAN SEMESTER`, "", "", "", ""],
+                ...firstSemester.map((course) => {
+                    const points = getPoints(course.grade);
+                    const gradePoints = course.unit * points;
+                    return [
+                        course.courseCode,
+                        course.courseTitle,
+                        course.unit.toString(),
+                        course.grade,
+                        gradePoints.toString(),
+                        "", // Cum G.P.A. will be calculated later
+                    ];
+                }),
+                ["", `${currentSession} RAIN SEMESTER`, "", "", "", ""],
+                ...secondSemester.map((course) => {
+                    const points = getPoints(course.grade);
+                    const gradePoints = course.unit * points;
+                    return [
+                        course.courseCode,
+                        course.courseTitle,
+                        course.unit.toString(),
+                        course.grade,
+                        gradePoints.toString(),
+                        "", // Cum G.P.A. will be calculated later
+                    ];
+                }),
+                ["", "", "", "", "", ""],
+                ["", "", "", "", "", ""],
+                ["", "", "TNU:", "", "TGP:", "CGPA:"],
+            ];
+
+            // Set up table dimensions and cell padding
+            const secondTableStartX = 50;
+            const secondTableStartY = currentY;
+            const secondCellWidth = 80;
+            const secondCellHeight = 20;
+            const secondFontSizeTable = 10;
+            const secondCellPadding = 5;
+
+            // Function to draw a table cell
+            const drawSecondCell = (text, x, y, width, height) => {
+                const textX = x + secondCellPadding;
+                const textY = y - secondCellPadding - height / 2 + secondFontSizeTable / 2;
+
+                currentPage.drawText(text, {
+                    x: textX,
+                    y: textY,
+                    size: secondFontSizeTable,
+                    font: font,
+                    color: rgb(0, 0, 0), // black color
+                });
+            };
+
+            // Function to draw the entire table
+            const drawSecondTable = (data) => {
+                let secondCurrentY = secondTableStartY;
+
+                for (const row of data) {
+                    let currentX = secondTableStartX;
+
+                    for (const cell of row) {
+                        // Draw the cell border
+                        currentPage.drawRectangle({
+                            x: currentX,
+                            y: secondCurrentY - secondCellHeight,
+                            width: secondCellWidth,
+                            height: secondCellHeight,
+                            borderColor: rgb(0, 0, 0), // black color
+                            borderWidth: 1,
+                        });
+
+                        // Draw the cell content
+                        drawSecondCell(cell, currentX, secondCurrentY, secondCellWidth, secondCellHeight);
+
+                        currentX += secondCellWidth;
+                    }
+
+                    secondCurrentY -= secondCellHeight;
+                }
+            };
+
+            // Draw the table
+            drawSecondTable(tableData);
+
+            // Calculate and set Cum G.P.A. values
+            const cgpaIndex = tableData.length - 1;
+            const tgpIndex = cgpaIndex - 1;
+            const tnuIndex = tgpIndex - 1;
+
+            let totalGradePoints = 0;
+            let totalUnits = 0;
+
+            // Calculate total grade points and total units for first semester
+            for (let i = 4; i < firstSemester.length + 4; i++) {
+                const gradePoints = parseInt(tableData[i][4]);
+                totalGradePoints += gradePoints;
+                totalUnits += parseInt(tableData[i][2]);
+            }
+
+            // Calculate total grade points and total units for second semester
+            for (let i = firstSemester.length + 6; i < firstSemester.length + 6 + secondSemester.length; i++) {
+                const gradePoints = parseInt(tableData[i][4]);
+                totalGradePoints += gradePoints;
+                totalUnits += parseInt(tableData[i][2]);
+            }
+
+            const cgpa = totalGradePoints / totalUnits;
+            tableData[tnuIndex][2] = totalUnits.toString();
+            tableData[tgpIndex][4] = totalGradePoints.toString();
+            tableData[cgpaIndex][5] = cgpa.toFixed(2).toString();
         }
 
         const pdfBytes = await pdfDoc.save();
@@ -138,8 +355,8 @@ export default function TpsDashboard() {
             const progress = jsonResponse.data;
             setRequestId(progress.requestId);
             setProgram(progress.program);
-            setFaculty(progress.faculty);
-            setDepartment(progress.department);
+            setProgressFaculty(progress.faculty);
+            setProgressDepartment(progress.department);
             setCost(progress.cost);
             setPaymentStatus(progress.paymentStatus);
         } catch (error) {
@@ -163,27 +380,78 @@ export default function TpsDashboard() {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' }
         });
-        const studentInfo = await response.json();
+        const jsonResponse = await response.json();
+        const studentInfo = jsonResponse.data;
 
         // Populate the form fields with the student data
-        setFirstName(studentInfo.data.firstName);
-        setMiddleName(studentInfo.data.middleName);
-        setLastName(studentInfo.data.lastName);
-        setFullName(`${studentInfo.data.firstName} ${studentInfo.data.middleName} ${studentInfo.data.lastName}`);
-        setStudentId(studentInfo.data.studentId);
-        setEmail(studentInfo.data.email);
+        setFirstName(studentInfo.firstName);
+        setMiddleName(studentInfo.middleName);
+        setLastName(studentInfo.lastName);
+        setEmail(studentInfo.email);
+        setFullName(`${studentInfo.firstName} ${studentInfo.middleName} ${studentInfo.lastName}`);
+        setSex(studentInfo.sex);
+        setDob(studentInfo.dob);
+        setStudentId(studentInfo.studentId);
+        setNationality(studentInfo.nationality);
+        setStateOfOrigin(studentInfo.stateOfOrigin);
+        setDateOfEntry(studentInfo.dateOfEntry);
+        setModeOfEntry(studentInfo.modeOfEntry);
+        setDepartment(studentInfo.department);
+        setFaculty(studentInfo.faculty);
+        setOption(studentInfo.option);
+    }
+
+    async function getStudentRecord(faculty, department, studentId) {
+        const response = await fetch(`/api/get-student-record?faculty=${faculty}&department=${department}&studentId=${studentId}`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        });
+        const jsonResponse = await response.json();
+        const sessionResultData = jsonResponse.data;
+        setSessionsArray(sessionResultData);
+    }
+
+    function calculateTotalUnits(semester) {
+        let totalUnits = 0;
+        let totalGradePoints = 0;
+
+        semester.forEach((course) => {
+            totalUnits += course.unit;
+
+            // Calculate grade points for each course
+            let points;
+            if (course.grade === "A") {
+                points = 5;
+            } else if (course.grade === "B") {
+                points = 4;
+            } else if (course.grade === "C") {
+                points = 3;
+            } else if (course.grade === "D") {
+                points = 2;
+            } else if (course.grade === "E") {
+                points = 1;
+            } else if (course.grade === "F") {
+                points = 0;
+            }
+            totalGradePoints += course.unit * points;
+        });
+
+        return {
+            totalUnits,
+            totalGradePoints,
+        };
     }
 
     function applyNew() {
-        if (programSelectedValue == "") {
+        if (!programSelectedValue) {
             alert("Please Select a Program");
             return;
         }
-        if (facultySelectedValue == "") {
+        if (!facultySelectedValue) {
             alert("Please Select Faculty");
             return;
         }
-        if (departmentSelectedValue == "") {
+        if (!departmentSelectedValue) {
             alert("Please Select Your Department");
             return;
         }
@@ -206,7 +474,49 @@ export default function TpsDashboard() {
     }, []);
 
     useEffect(() => {
-        if (studentId != '') {
+        if (faculty && department && studentId) {
+            getStudentRecord(faculty, department, studentId);
+        }
+    }, [faculty, department, studentId]);
+
+    useEffect(() => {
+        sessionsArray.forEach((session, index) => {
+            const firstSemester = session.sessionResult[0];
+            const secondSemester = session.sessionResult[1];
+
+            const firstSemesterResults = calculateTotalUnits(firstSemester);
+            const secondSemesterResults = calculateTotalUnits(secondSemester);
+
+            // Calculate final tnu for each session (for each semester separately)
+            const sessionTnu = firstSemesterResults.totalUnits + secondSemesterResults.totalUnits;
+
+            // Find the corresponding td element with ID "tnu" and update its content
+            const tnuElement = document.getElementById(`tnu-${index}`);
+            if (tnuElement) {
+                tnuElement.textContent = `TNU: ${sessionTnu}`;
+            }
+
+            // Calculate TGP for each session (for each semester separately)
+            const sessionTGP = firstSemesterResults.totalGradePoints + secondSemesterResults.totalGradePoints;
+
+            // Calculate CGPA for each session (for each semester separately)
+            const sessionCGPA = sessionTGP / (firstSemesterResults.totalUnits + secondSemesterResults.totalUnits);
+
+            // Find the corresponding td elements with IDs "tgp" and "cgpa" and update their content
+            const tgpElement = document.getElementById(`tgp-${index}`);
+            if (tgpElement) {
+                tgpElement.textContent = `TGP: ${sessionTGP.toFixed(2)}`;
+            }
+
+            const cgpaElement = document.getElementById(`cgpa-${index}`);
+            if (cgpaElement) {
+                cgpaElement.textContent = `CGPA: ${sessionCGPA.toFixed(2)}`;
+            }
+        });
+    }, [sessionsArray]);
+
+    useEffect(() => {
+        if (studentId) {
             retrieveProgress(studentId);
         }
     }, [studentId]);
@@ -215,13 +525,13 @@ export default function TpsDashboard() {
         if (programSelectedValue === "B.Eng.") {
             setIsFacultyDisabled(false);
         } else {
-            setProgramSelectedValue('');
+            setProgramSelectedValue(null);
             setIsFacultyDisabled(true);
         }
         if (facultySelectedValue === "SEET") {
             setIsDepartmentDisabled(false);
         } else {
-            setFacultySelectedValue('');
+            setFacultySelectedValue(null);
             setIsDepartmentDisabled(true);
         }
     }, [programSelectedValue, facultySelectedValue]);
@@ -266,7 +576,6 @@ export default function TpsDashboard() {
                                         <li><a href="">Contact</a></li>
                                     </ul>
                                     <div className="clear"></div>
-                                    {/* <div className="contactContent ui-corner-bl ui-corner-br" "=""> */}
                                 </div>
                             </div>
                             <div className=" clear"></div>
@@ -365,7 +674,7 @@ export default function TpsDashboard() {
                                                                             </td>
                                                                             <td>
                                                                                 <select data-val="true" data-val-required="*" id="program" name="program" value={programSelectedValue} onChange={(e) => setProgramSelectedValue(e.target.value)} style={{ width: "200px" }}>
-                                                                                    <option id='prog_1' value=''></option>
+                                                                                    <option id='prog_1' value=""></option>
                                                                                     <option value='B.Eng.'>B.Eng.</option>
                                                                                     <option value='B.Tech.'>B.Tech.</option>
                                                                                     <option value='M.Eng.'>M.Eng.</option>
@@ -594,10 +903,10 @@ export default function TpsDashboard() {
                                                                                             {program}
                                                                                         </td>
                                                                                         <td width='7%' style={{ borderWidth: "1px", textAlign: "center" }}>
-                                                                                            {faculty}
+                                                                                            {progressFaculty}
                                                                                         </td>
                                                                                         <td width='7%' style={{ borderWidth: "1px", textAlign: "center" }}>
-                                                                                            {department}
+                                                                                            {progressDepartment}
                                                                                         </td>
                                                                                         <td width='7%' style={{ borderWidth: "1px", textAlign: "center" }}>
                                                                                             {cost}
